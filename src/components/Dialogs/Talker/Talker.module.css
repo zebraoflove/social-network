@@ -1,0 +1,30 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+}
+
+.dialogUsers {
+    padding: 10px;
+}
+
+.user {
+    color: white;
+    text-decoration: none;
+}
+
+.active {
+    color: gold;
+    text-decoration: none;
+}
+
+.dialogMessages {
+    padding: 10px;
+}
+
+.dialogMessages .message {
+}
+
+.round {
+    width: 30px;
+    border-radius: 30px
+}

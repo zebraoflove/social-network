@@ -1,0 +1,13 @@
+.item {
+    color: chartreuse;
+    padding: 5px;
+}
+
+.item img {
+    width: 50px;
+    border-radius: 30px;
+}
+
+.likes {
+    padding: 5px;
+}

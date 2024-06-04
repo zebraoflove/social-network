@@ -1,0 +1,40 @@
+.dialogs {
+    display: grid;
+    grid-template-columns: 2fr 10fr;
+}
+
+.dialogUsers {
+    padding: 10px;
+}
+
+.user {
+    color: white;
+    text-decoration: none;
+}
+
+.active {
+    color: gold;
+    text-decoration: none;
+}
+
+.dialogMessages {
+    padding: 10px;
+}
+
+.messageArea {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    padding-top: 10px;
+}
+
+.messageArea Textarea {
+    width: 300px;
+    grid-column-start: 6;
+    grid-column-end: 9;
+}
+
+.messageArea button {
+    width: 50px;
+    grid-column-start: 9;
+    grid-column-end: 10;
+}

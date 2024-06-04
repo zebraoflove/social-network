@@ -1,0 +1,28 @@
+.userBlock {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    padding: 10px;
+}
+.followBlock {
+    display: grid;
+}
+.followBlock button{
+    width: 100px;
+}
+.round {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+}
+.infoBlock {
+
+}
+.infoBlock div {
+
+}
+.name {
+    font-weight: bold;
+}
+.status {
+    font-weight: lighter;
+}

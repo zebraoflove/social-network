@@ -1,0 +1,23 @@
+.selected {
+    font-weight: bold;
+}
+.pageNumbers {
+    text-align: center;
+}
+.pageNumbers span {
+    margin: 3px;
+    cursor: pointer;
+    font-size: 30px;
+}
+.pageNumbers textarea {
+    height: 30px;
+    width: 90px;
+    text-align: center;
+    vertical-align: text-bottom;
+}
+.pageNumbers button {
+    margin: 3px;
+    height: 30px;
+    width: 60px;
+    vertical-align: text-bottom;
+}

@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\Header",
+    "\\src\\components\\Profile",
+    "\\src\\components\\Profile\\MyPosts",
+    "\\src\\components\\Profile\\MyPosts\\Post"
+  ],
+  "SelectedNode": "\\src\\components\\Header\\Header.module.css",
+  "PreviewInSolutionExplorer": false
+}
