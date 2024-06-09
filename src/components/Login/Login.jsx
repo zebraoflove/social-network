@@ -30,7 +30,6 @@ const LoginForm = (props) => {
 }
 const Login = (props) => {
     const submit = (values, { setSubmitting }) => {
-        console.log(values)
         props.loginUser(values.email, values.password, values.rememberMe)
         setSubmitting(false)
     }

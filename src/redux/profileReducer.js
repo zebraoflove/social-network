@@ -59,4 +59,10 @@ export const saveAvatar = (file) => async (dispatch) => {
         dispatch(setAvatar(response.data.data.photos))
     }
 }
+export const saveProfile = (profile) => async (dispatch) => {
+    let response = await profileAPI.updateProfileInfo(profile)
+    if (response.data.resultCode === 0) {
+        dispatch(setUserProfile(profile))
+    }
+}
 export default profileReducer
