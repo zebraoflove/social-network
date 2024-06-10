@@ -2,7 +2,6 @@ import {Field, Form, Formik} from "formik";
 
 export const ProfileDataForm = ({userProfile, saveProfile, toggleEditMode}) => {
     const submit = (values, { setSubmitting }) => {
-        console.log(values)
         saveProfile(values)
         setSubmitting(false)
         toggleEditMode()
@@ -10,11 +9,11 @@ export const ProfileDataForm = ({userProfile, saveProfile, toggleEditMode}) => {
     return <div>
         <Formik initialValues={{fullName: userProfile.fullName, AboutMe: userProfile.aboutMe,
             lookingForAJob: userProfile.lookingForAJob,
-            lookingForAJobDescription: userProfile.lookingForAJobDescription,
-            github: userProfile.contacts.github, vk: userProfile.contacts.vk, facebook: userProfile.contacts.facebook,
-            instagram: userProfile.contacts.instagram, twitter: userProfile.contacts.twitter,
-            website: userProfile.contacts.website, youtube: userProfile.contacts.youtube,
-            mainLink: userProfile.contacts.mainLink}} onSubmit={submit}>
+            lookingForAJobDescription: userProfile.lookingForAJobDescription, contacts: {github: userProfile.contacts.github, vk: userProfile.contacts.vk, facebook: userProfile.contacts.facebook,
+                instagram: userProfile.contacts.instagram, twitter: userProfile.contacts.twitter,
+                website: userProfile.contacts.website, youtube: userProfile.contacts.youtube,
+                mainLink: userProfile.contacts.mainLink}
+            }} onSubmit={submit}>
             {({isSubmitting})=>(
                 <Form>
                     <div>
@@ -31,28 +30,28 @@ export const ProfileDataForm = ({userProfile, saveProfile, toggleEditMode}) => {
                     </div>
                     <b>Links:</b>
                     <div>
-                        <Field name="github" placeholder="github"/>
+                        <Field name="contacts.github" placeholder="github"/>
                     </div>
                     <div>
-                        <Field name="vk" placeholder="vk"/>
+                        <Field name="contacts.vk" placeholder="vk"/>
                     </div>
                     <div>
-                        <Field name="facebook" placeholder="facebook"/>
+                        <Field name="contacts.facebook" placeholder="facebook"/>
                     </div>
                     <div>
-                        <Field name="instagram" placeholder="instagram"/>
+                        <Field name="contacts.instagram" placeholder="instagram"/>
                     </div>
                     <div>
-                        <Field name="twitter" placeholder="twitter"/>
+                        <Field name="contacts.twitter" placeholder="twitter"/>
                     </div>
                     <div>
-                        <Field name="website" placeholder="website"/>
+                        <Field name="contacts.website" placeholder="website"/>
                     </div>
                     <div>
-                        <Field name="youtube" placeholder="youtube"/>
+                        <Field name="contacts.youtube" placeholder="youtube"/>
                     </div>
                     <div>
-                        <Field name="mainLink" placeholder="mainLink"/>
+                        <Field name="contacts.mainLink" placeholder="mainLink"/>
                     </div>
                     <button type="submit" disabled={isSubmitting}>Confirm</button>
                 </Form>
