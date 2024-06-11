@@ -1,6 +1,6 @@
 import './App.css';
 import Nav from './components/Nav/Nav';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import Music from "./components/Music/Music";
 import News from "./components/News/News";
 import Settings from "./components/Settings/Settings";
@@ -30,6 +30,7 @@ class App extends Component {
                         <div className='app-wrapper-content'>
                             <React.Suspense fallback={<Preloader/>}>
                                 <Routes>
+                                    <Route path={'/social-network'} element={<Navigate to={'/profile'}/>}/>
                                     <Route path='/profile/:userId?' element={<ProfileContainer/>}/>
                                     <Route path='/dialogs/*' element={<DialogsContainer/>}/>
                                     <Route path='/users' element={<UsersContainer/>}/>
@@ -37,6 +38,7 @@ class App extends Component {
                                     <Route path='/music' element={<Music/>}/>
                                     <Route path='/settings' element={<Settings/>}/>
                                     <Route path='/login' element={<Login/>}/>
+                                    <Route path={'/*'} element={<div>404 NOT FOUND</div>}/>
                                 </Routes>
                             </React.Suspense>
                         </div>
