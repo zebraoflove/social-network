@@ -21,11 +21,12 @@ class UsersContainer extends React.Component {
     }
     onPageChanged = (pageNumber) => {
         this.props.requestUsers(pageNumber, this.props.pageSize)
+        this.props.setCurrentPage(pageNumber)
     }
     render() {
         return <Users totalUsersCount={this.props.totalUsersCount} pageSize={this.props.pageSize} users={this.props.users}
                       currentPage={this.props.currentPage} isFetched={this.props.isFetched}
-                      onPageChanged={this.onPageChanged.bind(UsersContainer)} setCurrentPage={this.props.setCurrentPage}
+                      onPageChanged={this.onPageChanged.bind(UsersContainer)}
                       changeSearchedPage={this.props.changeSearchedPage} followingInProgress={this.props.followingInProgress}
                       toggleFollowing={this.props.toggleFollowing} followUser={this.props.followUser} unfollowUser={this.props.unfollowUser}/>
     }

@@ -1,5 +1,9 @@
 import React, {useState} from "react";
+import cn from "classnames"
 import s from "../Paginator/Paginator.module.css";
+import {Field, Form, Formik} from "formik";
+import {validateFindPage} from "../../../Validations/ValidationFindPage";
+import {Textarea} from "../FormControls/FormControls";
 
 let Paginator = (props) => {
     let pagesCount = Math.ceil(props.totalUsersCount / props.pageSize)
@@ -12,20 +16,42 @@ let Paginator = (props) => {
     let leftPortionPageNumber = (portionNumber - 1) * props.portionSize + 1
     let rightPortionPageNumber = (portionNumber) * props.portionSize
 
+    const onPrevPortion = () => {
+        let currentPage = leftPortionPageNumber - props.portionSize
+        props.onPageChanged(currentPage)
+        setPortionNumber(portionNumber - 1)
+    }
+    const onNextPortion = () => {
+        let currentPage = rightPortionPageNumber + 1
+        props.onPageChanged(currentPage)
+        setPortionNumber(portionNumber + 1)
+    }
+    const FindPage = () => {
+        const onFindPage = (values, {setSubmitting}) => {
+            let currentPage = values.pageNumber
+            props.onPageChanged(currentPage)
+            setPortionNumber(Math.ceil(currentPage / props.portionSize))
+            setSubmitting(false)
+            console.log(currentPage)
+        }
+        return <Formik initialValues={{pageNumber: ''}} onSubmit={onFindPage}>
+            {({isSubmitting}) => (
+                <Form>
+                    <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Textarea}/>
+                    <button type="submit" disabled={isSubmitting}>FIND</button>
+                </Form>
+            )}
+        </Formik>
+    }
     return <div className={s.pageNumbers}>
-        {portionNumber > 1 && <button onClick={() => {
-            setPortionNumber(portionNumber - 1)
-        }}>PREV</button>}
+        {portionNumber > 1 && <button onClick={onPrevPortion}>PREV</button>}
         {pages.filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
             .map(p => {
-                return <span key={p.id} className={props.currentPage === p ? s.selected : undefined}
-                             onClick={() => {
-                                 props.onPageChanged(p)
-                             }}>{p}</span>
+                return <span key={p.id} className={cn({[s.selected] : props.currentPage === p})}
+                             onClick={() => {props.onPageChanged(p)}}>{p}</span>
             })}
-        {portionNumber < portionCount && <button onClick={() => {
-            setPortionNumber(portionNumber + 1)
-        }}>NEXT</button>}
+        {portionNumber < portionCount && <button onClick={onNextPortion}>NEXT</button>}
+        <FindPage/>
     </div>
 }
 export default Paginator
