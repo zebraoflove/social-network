@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import {
-    setCurrentPage, setTotalUsersCount, setFetched, changeSearchedPage,
+    setCurrentPage, setTotalUsersCount, setFetched,
     toggleFollowing, requestUsers, followUser, unfollowUser
 } from "../../redux/usersReducer";
 import Users from "./Users";
@@ -10,7 +10,6 @@ import {
     getCurrentPage, getFollowingInProgress,
     getIsFetched,
     getPageSize,
-    getSearchedPage,
     getTotalUsersCount,
     getUsers
 } from "../../redux/usersSelectors";
@@ -19,15 +18,10 @@ class UsersContainer extends React.Component {
     componentDidMount() {
         this.props.requestUsers(this.props.currentPage, this.props.pageSize)
     }
-    onPageChanged = (pageNumber) => {
-        this.props.requestUsers(pageNumber, this.props.pageSize)
-        this.props.setCurrentPage(pageNumber)
-    }
     render() {
         return <Users totalUsersCount={this.props.totalUsersCount} pageSize={this.props.pageSize} users={this.props.users}
                       currentPage={this.props.currentPage} isFetched={this.props.isFetched}
-                      onPageChanged={this.onPageChanged.bind(UsersContainer)}
-                      changeSearchedPage={this.props.changeSearchedPage} followingInProgress={this.props.followingInProgress}
+                      requestUsers = {this.props.requestUsers} followingInProgress={this.props.followingInProgress}
                       toggleFollowing={this.props.toggleFollowing} followUser={this.props.followUser} unfollowUser={this.props.unfollowUser}/>
     }
 }
@@ -38,12 +32,11 @@ let mapStateToProps = (state) => {
         totalUsersCount: getTotalUsersCount(state),
         currentPage: getCurrentPage(state),
         isFetched: getIsFetched(state),
-        searchedPage: getSearchedPage(state),
         followingInProgress: getFollowingInProgress(state)
     }
 }
 export default compose(
     withAuthRedirect,
     connect(mapStateToProps,
-        {setCurrentPage, setTotalUsersCount, setFetched, changeSearchedPage, toggleFollowing, requestUsers, followUser, unfollowUser})
+        {setCurrentPage, setTotalUsersCount, setFetched, toggleFollowing, requestUsers, followUser, unfollowUser})
 )(UsersContainer)

@@ -14,8 +14,7 @@ let initialState = {
     totalUsersCount: 50,
     currentPage: 1,
     isFetched: true,
-    followingInProgress: [],
-    searchedPage: null
+    followingInProgress: []
 }
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -43,9 +42,6 @@ const usersReducer = (state = initialState, action) => {
         case SET_FETCHED: {
             return {...state, isFetched: action.isFetched}
         }
-        case CHANGE_SEARCHED_PAGE: {
-            return {...state, searchedPage: action.searchedPage}
-        }
         case TOGGLE_FOLLOWING: {
             return {
                 ...state,
@@ -64,7 +60,6 @@ export const setUsers = (users) => ({type: SET_USERS, users})
 export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage})
 export const setTotalUsersCount = (totalCount) => ({type: SET_TOTAL_USERS_COUNT, totalCount})
 export const setFetched = (isFetched) => ({type: SET_FETCHED, isFetched})
-export const changeSearchedPage = (searchedPage) => ({type: CHANGE_SEARCHED_PAGE, searchedPage})
 export const toggleFollowing = (followingInProgress, userid) => ({type: TOGGLE_FOLLOWING, followingInProgress, userid})
 export const requestUsers = (page, pageSize) => async (dispatch) => {
     dispatch(setFetched(true))

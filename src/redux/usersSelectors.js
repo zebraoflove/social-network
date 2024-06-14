@@ -17,9 +17,6 @@ export const getCurrentPage = (state) => {
 export const getIsFetched = (state) => {
     return state.usersPage.isFetched
 }
-export const getSearchedPage = (state) => {
-    return state.usersPage.searchedPage
-}
 export const getFollowingInProgress = (state) => {
     return state.usersPage.followingInProgress
 }

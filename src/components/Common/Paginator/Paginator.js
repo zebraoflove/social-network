@@ -18,27 +18,25 @@ let Paginator = (props) => {
 
     const onPrevPortion = () => {
         let currentPage = leftPortionPageNumber - props.portionSize
-        props.onPageChanged(currentPage)
+        props.requestUsers(currentPage, props.pageSize)
         setPortionNumber(portionNumber - 1)
     }
     const onNextPortion = () => {
         let currentPage = rightPortionPageNumber + 1
-        props.onPageChanged(currentPage)
+        props.requestUsers(currentPage, props.pageSize)
         setPortionNumber(portionNumber + 1)
     }
     const FindPage = () => {
-        const onFindPage = (values, {setSubmitting}) => {
+        const onFindPage = (values) => {
             let currentPage = values.pageNumber
-            props.onPageChanged(currentPage)
+            props.requestUsers(currentPage, props.pageSize)
             setPortionNumber(Math.ceil(currentPage / props.portionSize))
-            setSubmitting(false)
-            console.log(currentPage)
         }
         return <Formik initialValues={{pageNumber: ''}} onSubmit={onFindPage}>
-            {({isSubmitting}) => (
+            {() => (
                 <Form>
                     <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Textarea}/>
-                    <button type="submit" disabled={isSubmitting}>FIND</button>
+                    <button type="submit">FIND</button>
                 </Form>
             )}
         </Formik>
@@ -48,7 +46,7 @@ let Paginator = (props) => {
         {pages.filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
             .map(p => {
                 return <span key={p.id} className={cn({[s.selected] : props.currentPage === p})}
-                             onClick={() => {props.onPageChanged(p)}}>{p}</span>
+                             onClick={() => {props.requestUsers(p, props.pageSize)}}>{p}</span>
             })}
         {portionNumber < portionCount && <button onClick={onNextPortion}>NEXT</button>}
         <FindPage/>

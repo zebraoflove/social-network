@@ -17,9 +17,18 @@ const UsersContainer = React.lazy(() => import('./components/Users/UsersContaine
 const Login = React.lazy(() => import('./components/Login/Login'))
 
 class App extends Component {
+    catchAllUnhandledErrors = (reason, promise) => {
+        alert(reason.reason.message)
+        console.error(reason.reason.message)
+    }
     componentDidMount() {
         this.props.initialiseApp()
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
     }
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }
+
     render() {
         if(!this.props.initialised) return <Preloader/>
         return (

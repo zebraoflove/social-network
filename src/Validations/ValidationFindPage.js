@@ -5,7 +5,7 @@ export const validateFindPage = (pageCount) => (value) => {
     } else if (!/^[0-9]{1,10}$/i.test(value)) {
         error = 'Incorrect symbols'
     } else if (value < 1 || value > pageCount) {
-        error = `Out of bounds`
+        error = 'Out of bounds'
     }
     return error
 }

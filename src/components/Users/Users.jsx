@@ -6,9 +6,9 @@ import User from "./User/User";
 let Users = (props) => {
 
     return <div>
-        <Paginator portionSize = {10} totalUsersCount={props.totalUsersCount} pageSize={props.pageSize} users={props.users}
-                   currentPage={props.currentPage} onPageChanged={props.onPageChanged}
-                   changeSearchedPage={props.changeSearchedPage} setCurrentPage={props.setCurrentPage}/>
+        <Paginator portionSize = {10} totalUsersCount={props.totalUsersCount} pageSize={props.pageSize}
+                   users={props.users} currentPage={props.currentPage}
+                   onPageChanged={props.onPageChanged} setCurrentPage={props.setCurrentPage}/>
         <div className={s.searchBlock}>
             SEARCH BLOCK
         </div>

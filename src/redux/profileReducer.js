@@ -1,4 +1,5 @@
 import {profileAPI} from "../API/API";
+
 const ADD_POST = "ADD-POST"
 const SET_USER_PROFILE = "SET-USER-PROFILE"
 const SET_STATUS = "SET-STATUS"
@@ -48,9 +49,13 @@ export const getStatus = (userId) => async (dispatch) => {
     dispatch(setStatus(response.data))
 }
 export const updateStatus = (status) => async (dispatch) => {
-    let response = await profileAPI.updateStatus(status)
-    if (response.data.resultCode === 0) {
-        dispatch(setStatus(status))
+    try {
+        let response = await profileAPI.updateStatus(status)
+        if (response.data.resultCode === 0) {
+            dispatch(setStatus(status))
+        }
+    } catch (error) {
+        alert('Error in updating status')
     }
 }
 export const saveAvatar = (file) => async (dispatch) => {
@@ -64,6 +69,8 @@ export const saveProfile = (profile) => async (dispatch, getState) => {
     if (response.data.resultCode === 0) {
         const id = getState().auth.id
         dispatch(getUserProfile(id))
+    } else {
+        alert(response.data.messages[0])
     }
 }
 export default profileReducer
