@@ -1,14 +1,20 @@
 import {followAPI, usersAPI} from "../API/API";
-
+import {UserType} from "../Types/types";
 const CHANGE_FOLLOWING = "CHANGE-FOLLOWING"
 const SET_USERS = "SET-USERS"
 const SET_CURRENT_PAGE = "SET-CURRENT-PAGE"
 const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT"
 const SET_FETCHED = "SET-FETCHED"
-const CHANGE_SEARCHED_PAGE = "CHANGE-SEARCHED-PAGE"
 const TOGGLE_FOLLOWING = "TOGGLE-FOLLOWING"
-
-let initialState = {
+type InitialStateType = {
+    users: Array<UserType>
+    pageSize: number
+    totalUsersCount: number
+    currentPage: number
+    isFetched: boolean
+    followingInProgress: Array<number>
+}
+let initialState: InitialStateType = {
     users: [],
     pageSize: 10,
     totalUsersCount: 50,
@@ -16,7 +22,7 @@ let initialState = {
     isFetched: true,
     followingInProgress: []
 }
-const usersReducer = (state = initialState, action) => {
+const usersReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
         case CHANGE_FOLLOWING: {
             return {
@@ -55,13 +61,19 @@ const usersReducer = (state = initialState, action) => {
         }
     }
 }
-export const changeFollowing = (userid) => ({type: CHANGE_FOLLOWING, userid})
-export const setUsers = (users) => ({type: SET_USERS, users})
-export const setCurrentPage = (currentPage) => ({type: SET_CURRENT_PAGE, currentPage})
-export const setTotalUsersCount = (totalCount) => ({type: SET_TOTAL_USERS_COUNT, totalCount})
-export const setFetched = (isFetched) => ({type: SET_FETCHED, isFetched})
-export const toggleFollowing = (followingInProgress, userid) => ({type: TOGGLE_FOLLOWING, followingInProgress, userid})
-export const requestUsers = (page, pageSize) => async (dispatch) => {
+type ChangeFollowingActionType = {type: typeof CHANGE_FOLLOWING, userid: number}
+export const changeFollowing = (userid: number): ChangeFollowingActionType => ({type: CHANGE_FOLLOWING, userid})
+type SetUsersActionType = {type: typeof SET_USERS, users: Array<UserType>}
+export const setUsers = (users: Array<UserType>): SetUsersActionType => ({type: SET_USERS, users})
+type SetCurrentPageActionType = {type: typeof SET_CURRENT_PAGE, currentPage: number}
+export const setCurrentPage = (currentPage: number): SetCurrentPageActionType => ({type: SET_CURRENT_PAGE, currentPage})
+type SetTotalUsersCountActionType = {type: typeof SET_TOTAL_USERS_COUNT, totalCount: number}
+export const setTotalUsersCount = (totalCount: number): SetTotalUsersCountActionType => ({type: SET_TOTAL_USERS_COUNT, totalCount})
+type SetFetchedActionType = {type: typeof SET_FETCHED, isFetched: boolean}
+export const setFetched = (isFetched: boolean): SetFetchedActionType => ({type: SET_FETCHED, isFetched})
+type ToggleFollowingActionType = {type: typeof TOGGLE_FOLLOWING, followingInProgress: boolean, userid: number}
+export const toggleFollowing = (followingInProgress: boolean, userid: number): ToggleFollowingActionType => ({type: TOGGLE_FOLLOWING, followingInProgress, userid})
+export const requestUsers = (page: number, pageSize: number) => async (dispatch: any) => {
     dispatch(setFetched(true))
     let response = await usersAPI.getUsers(page, pageSize)
     dispatch(setCurrentPage(page))
@@ -69,7 +81,7 @@ export const requestUsers = (page, pageSize) => async (dispatch) => {
     dispatch(setUsers(response.items))
     dispatch(setTotalUsersCount(response.totalCount))
 }
-export const unfollowUser = (userId) => async (dispatch) => {
+export const unfollowUser = (userId: number) => async (dispatch: any) => {
     dispatch(toggleFollowing(true, userId))
     let response = await followAPI.unfollowUser(userId)
     if (response.data.resultCode === 0) {
@@ -77,7 +89,7 @@ export const unfollowUser = (userId) => async (dispatch) => {
     }
     dispatch(toggleFollowing(false, userId))
 }
-export const followUser = (userId) => async (dispatch) => {
+export const followUser = (userId: number) => async (dispatch: any) => {
     dispatch(toggleFollowing(true, userId))
     let response = await followAPI.followUser(userId)
     if (response.data.resultCode === 0) {

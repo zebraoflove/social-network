@@ -1,6 +1,13 @@
 const ADD_MESSAGE = "ADD-MESSAGE"
 const DELETE_MESSAGE = "DELETE-MESSAGE"
-let initialState = {
+type AddMessageActionType = {type: typeof ADD_MESSAGE, messageText: string}
+type DeleteMessageActionType =  {type: typeof DELETE_MESSAGE, messageId: number}
+type MessageType = {id: number, text: string, belong: boolean}
+type UserType = {id: number, name: string, ava: string}
+type InitialStateType = {
+    usersData: Array<UserType>
+    messagesData: Array<MessageType>}
+let initialState: InitialStateType = {
     usersData: [
         {
             id: 1, name: 'Igor',
@@ -28,11 +35,10 @@ let initialState = {
         {id: 5, text: "Of course", belong: false}
     ]
 }
-const dialogsReducer = (state = initialState, action) => {
+const dialogsReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
         case ADD_MESSAGE: {
-            let id = state.messagesData.length + 1
-            let newMessage = {id, text: action.messageText, belong: true}
+            let newMessage: MessageType = {id: state.messagesData.length + 1, text: action.messageText, belong: true}
             return {
                 ...state,
                 messagesData: [...state.messagesData, newMessage]
@@ -49,6 +55,6 @@ const dialogsReducer = (state = initialState, action) => {
         }
     }
 }
-export const  addMessage = (messageText) => ({type: ADD_MESSAGE, messageText})
-export const deleteMessage = (messageId) => ({type: DELETE_MESSAGE, messageId})
+export const  addMessage = (messageText: string): AddMessageActionType => ({type: ADD_MESSAGE, messageText})
+export const deleteMessage = (messageId: number): DeleteMessageActionType => ({type: DELETE_MESSAGE, messageId})
 export default dialogsReducer
