@@ -12,11 +12,19 @@ export type ContactsType = {
 export type PhotosType = {small: string | null, large: string | null}
 export type ProfileType = {
     userId: number
+    aboutMe: string
     lookingForAJob: boolean
     lookingForAJobDescription: string | null
     fullName: string
     contacts: ContactsType
     photos: PhotosType
+}
+export type ProfileInfoType = {
+    fullName: string
+    aboutMe: string
+    lookingForAJob: boolean
+    lookingForAJobDescription: string | null
+    contacts: ContactsType
 }
 export type UserType = {
     id: number
@@ -25,3 +33,5 @@ export type UserType = {
     photos: PhotosType
     followed: boolean
 }
+export type MessageType = {id: number, text: string, belong: boolean}
+export type TalkerType = {id: number, name: string, ava: string}
