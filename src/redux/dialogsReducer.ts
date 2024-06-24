@@ -3,6 +3,7 @@ const ADD_MESSAGE = "ADD-MESSAGE"
 const DELETE_MESSAGE = "DELETE-MESSAGE"
 type AddMessageActionType = {type: typeof ADD_MESSAGE, messageText: string}
 type DeleteMessageActionType =  {type: typeof DELETE_MESSAGE, messageId: number}
+type ActionType = AddMessageActionType | DeleteMessageActionType
 type InitialStateType = {
     usersData: Array<TalkerType>
     messagesData: Array<MessageType>}
@@ -34,7 +35,7 @@ let initialState: InitialStateType = {
         {id: 5, text: "Of course", belong: false}
     ]
 }
-const dialogsReducer = (state = initialState, action: any): InitialStateType => {
+const dialogsReducer = (state = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
         case ADD_MESSAGE: {
             let newMessage: MessageType = {id: state.messagesData.length + 1, text: action.messageText, belong: true}

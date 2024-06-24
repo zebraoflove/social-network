@@ -1,13 +1,13 @@
 .navbar {
     grid-area: n;
-    background-color: blue;
+    background-color: rgb(255, 75, 118);
     padding: 5px;
 }
 .sidebar {
 
 }
 .item a{
-    color: white;
+    color: #ffffff;
     text-decoration: none;
 }
 .item a.active {

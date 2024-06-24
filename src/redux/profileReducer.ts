@@ -1,5 +1,7 @@
-import {profileAPI} from "../API/API";
+import {profileAPI, ResultCodesEnum} from "../API/API";
 import {PhotosType, PostType, ProfileType} from "../Types/types";
+import {ThunkAction} from "redux-thunk";
+import {AppStateType} from "./redux-store";
 const ADD_POST = "ADD-POST"
 const SET_USER_PROFILE = "SET-USER-PROFILE"
 const SET_STATUS = "SET-STATUS"
@@ -9,6 +11,7 @@ type AddPostActionType = {type: typeof ADD_POST, newPost: string}
 type SetUserProfileActionType = {type: typeof SET_USER_PROFILE, userProfile: ProfileType}
 type SetStatusActionType = {type: typeof SET_STATUS, status: string}
 type SetAvatarActionType = {type: typeof SET_AVATAR, photos: PhotosType}
+type ActionType = AddPostActionType | SetUserProfileActionType | SetStatusActionType | SetAvatarActionType
 let initialState: InitialStateType = {
     postsData: [
         {id: 1, message: "Hi, how are you?", likes: 20},
@@ -18,7 +21,7 @@ let initialState: InitialStateType = {
     userProfile: null,
     status: ""
 }
-const profileReducer = (state = initialState, action: any): InitialStateType => {
+const profileReducer = (state = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
         case ADD_POST: {
             let newPost: PostType = {id: (state.postsData.length) + 1, message: action.newPost, likes: 0}
@@ -45,37 +48,42 @@ export const addPost = (newPost: string): AddPostActionType => ({type: ADD_POST,
 export const setUserProfile = (userProfile: ProfileType): SetUserProfileActionType => ({type: SET_USER_PROFILE, userProfile})
 export const setStatus = (status: string): SetStatusActionType => ({type: SET_STATUS, status})
 export const setAvatar = (photos: PhotosType): SetAvatarActionType => ({type: SET_AVATAR, photos})
-export const getUserProfile = (userId: number) => async (dispatch: any) => {
+export const getUserProfile = (userId: number): ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType> => async (dispatch) => {
     let response = await profileAPI.getUserProfile(userId)
     dispatch(setUserProfile(response.data))
 }
-export const getStatus = (userId: number) => async (dispatch: any) => {
+export const getStatus = (userId: number): ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType> => async (dispatch) => {
     let response = await profileAPI.getStatus(userId)
     dispatch(setStatus(response.data))
 }
-export const updateStatus = (status: string) => async (dispatch: any) => {
+export const updateStatus = (status: string): ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType> => async (dispatch) => {
     try {
-        let response = await profileAPI.updateStatus(status)
-        if (response.data.resultCode === 0) {
+        let data = await profileAPI.updateStatus(status)
+        if (data.resultCode === ResultCodesEnum.Success) {
             dispatch(setStatus(status))
         }
     } catch (error) {
         alert('Error in updating status')
     }
 }
-export const saveAvatar = (file: File) => async (dispatch: any) => {
+export const saveAvatar = (file: File): ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType> => async (dispatch) => {
     let response = await profileAPI.updateAvatar(file)
-    if (response.data.resultCode === 0) {
-        dispatch(setAvatar(response.data.data.photos))
+    if (response.resultCode === ResultCodesEnum.Success) {
+        dispatch(setAvatar(response.data.photos))
     }
 }
-export const saveProfile = (profile: ProfileType) => async (dispatch: any, getState: any) => {
-    let response = await profileAPI.updateProfileInfo(profile)
-    if (response.data.resultCode === 0) {
+export const saveProfile = (profile: ProfileType): ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType> => async (dispatch, getState) => {
+    let data = await profileAPI.updateProfileInfo(profile)
+    if (data.resultCode === ResultCodesEnum.Success) {
         const id = getState().auth.id
-        dispatch(getUserProfile(id))
+        if(id) dispatch(getUserProfile(id))
     } else {
-        alert(response.data.messages[0])
+        alert(data.messages[0])
     }
 }
 export default profileReducer
