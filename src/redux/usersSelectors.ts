@@ -24,3 +24,6 @@ export const getFollowingInProgress = (state: AppStateType) => {
 export const getTermS = (state: AppStateType) => {
     return state.usersPage.term
 }
+export const getIsFriendS = (state: AppStateType) => {
+    return state.usersPage.isFriend
+}

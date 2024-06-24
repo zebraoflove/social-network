@@ -3,7 +3,7 @@ import React from "react";
 import Preloader from "../Common/Preloader/Preloader";
 import Paginator from "../Common/Paginator/Paginator";
 import User from "./User/User";
-import {UserType} from "../../Types/types";
+import {FollowedType, UserType} from "../../Types/types";
 type PropsType = {
     isFetched: boolean
     users: Array<UserType>
@@ -14,14 +14,15 @@ type PropsType = {
     pageSize: number
     currentPage: number
     term: string
+    isFriend: FollowedType
     requestUsers: (currentPage: number, pageSize: number, term: string) => (void)
 }
 const Users: React.FC<PropsType> = ({isFetched, users, followUser, unfollowUser, followingInProgress,
-                                        term, totalUsersCount, pageSize,
+                                        term, isFriend, totalUsersCount, pageSize,
                                         currentPage, requestUsers}) => {
     return <div>
         <Paginator portionSize = {10} totalUsersCount={totalUsersCount} pageSize={pageSize}
-                   currentPage={currentPage} term={term} requestUsers={requestUsers}/>
+                   currentPage={currentPage} term={term} isFriend={isFriend} requestUsers={requestUsers}/>
         <div>
             {isFetched ? <Preloader/> : null}
         </div>

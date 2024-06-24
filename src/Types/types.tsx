@@ -35,3 +35,4 @@ export type UserType = {
 }
 export type MessageType = {id: number, text: string, belong: boolean}
 export type TalkerType = {id: number, name: string, ava: string}
+export type FollowedType = "All" | "Followed" | "NotFollowed"

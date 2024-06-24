@@ -1,5 +1,5 @@
 import {followAPI, usersAPI} from "../API/API";
-import {UserType} from "../Types/types";
+import {FollowedType, UserType} from "../Types/types";
 const CHANGE_FOLLOWING = "CHANGE-FOLLOWING"
 const SET_USERS = "SET-USERS"
 const SET_CURRENT_PAGE = "SET-CURRENT-PAGE"
@@ -7,6 +7,7 @@ const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT"
 const SET_FETCHED = "SET-FETCHED"
 const TOGGLE_FOLLOWING = "TOGGLE-FOLLOWING"
 const SET_TERM = "SET-TERM"
+const SET_FRIEND = "SET-FRIEND"
 type InitialStateType = {
     users: Array<UserType>
     pageSize: number
@@ -15,6 +16,7 @@ type InitialStateType = {
     isFetched: boolean
     followingInProgress: Array<number>,
     term: string
+    isFriend: FollowedType
 }
 let initialState: InitialStateType = {
     users: [],
@@ -23,7 +25,8 @@ let initialState: InitialStateType = {
     currentPage: 1,
     isFetched: true,
     followingInProgress: [],
-    term: ""
+    term: "",
+    isFriend: "All"
 }
 const usersReducer = (state = initialState, action: any): InitialStateType => {
     switch (action.type) {
@@ -54,6 +57,9 @@ const usersReducer = (state = initialState, action: any): InitialStateType => {
         case SET_TERM: {
             return {...state, term: action.term}
         }
+        case SET_FRIEND: {
+            return {...state, isFriend: action.isFriend}
+        }
         case TOGGLE_FOLLOWING: {
             return {
                 ...state,
@@ -74,6 +80,7 @@ type SetTotalUsersCountActionType = {type: typeof SET_TOTAL_USERS_COUNT, totalCo
 type SetFetchedActionType = {type: typeof SET_FETCHED, isFetched: boolean}
 type ToggleFollowingActionType = {type: typeof TOGGLE_FOLLOWING, followingInProgress: boolean, userid: number}
 type SetTermActionType = {type: typeof SET_TERM, term: string}
+type SetFriendActionType = {type: typeof SET_FRIEND, isFriend: FollowedType}
 export const changeFollowing = (userid: number): ChangeFollowingActionType => ({type: CHANGE_FOLLOWING, userid})
 const setUsers = (users: Array<UserType>): SetUsersActionType => ({type: SET_USERS, users})
 export const setCurrentPage = (currentPage: number): SetCurrentPageActionType => ({type: SET_CURRENT_PAGE, currentPage})
@@ -81,10 +88,12 @@ export const setTotalUsersCount = (totalCount: number): SetTotalUsersCountAction
 export const setFetched = (isFetched: boolean): SetFetchedActionType => ({type: SET_FETCHED, isFetched})
 const setTerm = (term: string): SetTermActionType => ({type: SET_TERM, term})
 const toggleFollowing = (followingInProgress: boolean, userid: number): ToggleFollowingActionType => ({type: TOGGLE_FOLLOWING, followingInProgress, userid})
-export const requestUsers = (page: number, pageSize: number, term: string) => async (dispatch: any) => {
+const setFriend = (isFriend: FollowedType): SetFriendActionType => ({type: SET_FRIEND, isFriend})
+export const requestUsers = (page: number, pageSize: number, term: string, isFriend: FollowedType) => async (dispatch: any) => {
     dispatch(setFetched(true))
     dispatch(setTerm(term))
-    let response = await usersAPI.getUsers(page, pageSize, term)
+    dispatch(setFriend(isFriend))
+    let response = await usersAPI.getUsers(page, pageSize, term, isFriend)
     dispatch(setCurrentPage(page))
     dispatch(setFetched(false))
     dispatch(setUsers(response.items))

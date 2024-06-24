@@ -1,4 +1,5 @@
 import axios from "axios";
+import {FollowedType, ProfileInfoType} from "../Types/types";
 
 const instance = axios.create({
     withCredentials: true,
@@ -8,32 +9,35 @@ const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0/'
 })
 export const usersAPI = {
-    getUsers(currentPage, pageSize, term) {
-        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${term}`)
+    getUsers(currentPage: number, pageSize: number, term: string, isFriend: FollowedType) {
+        let friend = null
+        if(isFriend === 'Followed') friend = true
+        if(isFriend === 'NotFollowed') friend = false
+        return instance.get(`users?page=${currentPage}&count=${pageSize}&term=${term}&friend=${friend}`)
             .then(response => {
                 return response.data
             })
     }
 }
 export const followAPI = {
-    followUser(userId) {
+    followUser(userId: number) {
         return instance.post(`follow/${userId}`)
     },
-    unfollowUser(userId) {
+    unfollowUser(userId: number) {
         return instance.delete(`follow/${userId}`)
     }
 }
 export const profileAPI = {
-    getUserProfile(userId) {
+    getUserProfile(userId: number) {
         return instance.get(`profile/` + userId)
     },
-    getStatus(userId) {
+    getStatus(userId: number) {
         return instance.get('profile/status/' + userId)
     },
-    updateStatus(status) {
+    updateStatus(status: string) {
         return instance.put('profile/status/', {status: status})
     },
-    updateAvatar(file) {
+    updateAvatar(file: File) {
         const formData = new FormData();
         formData.append("image", file);
         return instance.put('profile/photo', formData, {
@@ -42,7 +46,7 @@ export const profileAPI = {
             }
         })
     },
-    updateProfileInfo(profile) {
+    updateProfileInfo(profile: ProfileInfoType) {
         return instance.put('profile', profile)
     }
 }
@@ -50,7 +54,7 @@ export const authAPI = {
     authUser() {
         return instance.get(`auth/me`)
     },
-    loginUser(email, password, rememberMe = false, captcha = null) {
+    loginUser(email: string, password: string, rememberMe = false, captcha = null) {
         return instance.post('auth/login', {email, password, rememberMe, captcha})
     },
     logoutUser() {

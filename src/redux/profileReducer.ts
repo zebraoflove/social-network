@@ -63,7 +63,7 @@ export const updateStatus = (status: string) => async (dispatch: any) => {
         alert('Error in updating status')
     }
 }
-export const saveAvatar = (file: object) => async (dispatch: any) => {
+export const saveAvatar = (file: File) => async (dispatch: any) => {
     let response = await profileAPI.updateAvatar(file)
     if (response.data.resultCode === 0) {
         dispatch(setAvatar(response.data.data.photos))
