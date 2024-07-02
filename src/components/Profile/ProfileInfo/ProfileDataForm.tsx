@@ -24,46 +24,38 @@ export const ProfileDataForm: React.FC<PropsType> = ({userProfile, saveProfile, 
             }} onSubmit={submit}>
             {({isSubmitting})=>(
                 <Form>
-                    <div>
-                        Nickname: <Field validate={validateRequiredInfo} component={Input} name="fullName" placeholder="Nickname"/>
-                    </div>
-                    <div>
-                        About me: <Field validate={validateRequiredInfo} component={Input} name="aboutMe" placeholder="AboutMe"/>
-                    </div>
+                    {CreateRequiredInfoField("Nickname", "fullName", "Nickname")}
+                    {CreateRequiredInfoField("AboutMe", "aboutMe", "About me")}
                     <div>
                         Looking for a job? <Field name="lookingForAJob" type="checkbox"/>
                     </div>
-                    <div>
-                        My skills: <Field validate={validateRequiredInfo} component={Input} name="lookingForAJobDescription" placeholder="My skills"/>
-                    </div>
+                    {CreateRequiredInfoField("My skills", "lookingForAJobDescription", "My skills")}
                     <b>Links:</b>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.github" placeholder="github"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.vk" placeholder="vk"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.facebook" placeholder="facebook"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.instagram" placeholder="instagram"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.twitter" placeholder="twitter"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.website" placeholder="website"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.youtube" placeholder="youtube"/>
-                    </div>
-                    <div>
-                        <Field validate={validateLink} component={Input} name="contacts.mainLink" placeholder="mainLink"/>
-                    </div>
+                    {CreateContactsField("github")}
+                    {CreateContactsField("vk")}
+                    {CreateContactsField("facebook")}
+                    {CreateContactsField("instagram")}
+                    {CreateContactsField("twitter")}
+                    {CreateContactsField("website")}
+                    {CreateContactsField("youtube")}
+                    {CreateContactsField("mainLink")}
                     <button type="submit" disabled={isSubmitting}>Confirm</button>
                 </Form>
             )}
         </Formik>
     </div>
+}
+const CreateRequiredInfoField = (placeholder: string, name: string, title: string) => {
+    return(
+        <div>
+            {title}: <Field validate={validateRequiredInfo} component={Input} name={name} placeholder={placeholder}/>
+        </div>
+    )
+}
+const CreateContactsField = (placeholder: string) => {
+    return(
+        <div>
+            <Field validate={validateLink} component={Input} name={`contacts.${placeholder}`} placeholder={placeholder}/>
+        </div>
+    )
 }

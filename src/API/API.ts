@@ -14,12 +14,12 @@ export enum ResultCodesEnum {
 export enum ResultCodeWithCaptcha {
     CaptchaIsRequired = 10
 }
-type StandardResponseType = {
-    data: {}
-    resultCode: ResultCodesEnum
+export type StandardResponseType<D = {}, RC = ResultCodesEnum> = {
+    data: D
+    resultCode: RC
     messages: Array<string>
 }
-type GetUsersResponseType = {
+export type GetUsersResponseType = {
     items: Array<UserType>
     totalCount: number
     error: string | null
@@ -72,25 +72,18 @@ export const profileAPI = {
             .then(res => res.data)
     }
 }
-export type AuthUserResponseType = {
-    data: {id: number, email: string, login: string}
-    resultCode: ResultCodesEnum
-    messages: Array<string>
-}
-type LoginUserResponseType = {
-    data: {userId: number}
-    resultCode: ResultCodesEnum | ResultCodeWithCaptcha
-    messages: Array<string>
-}
 type CaptchaResponseType = {
     url: string
 }
 export const authAPI = {
     authUser() {
-        return instance.get<AuthUserResponseType>(`auth/me`).then(res => res.data)
+        return instance.get<StandardResponseType<{id: number, email: string, login: string}>>(`auth/me`)
+            .then(res => res.data)
     },
     loginUser(email: string, password: string, rememberMe = false, captcha: string | null = null) {
-        return instance.post<LoginUserResponseType>('auth/login', {email, password, rememberMe, captcha}).then(res => res.data)
+        return instance.post<StandardResponseType<{userId: number}, ResultCodesEnum | ResultCodeWithCaptcha>>
+        ('auth/login', {email, password, rememberMe, captcha})
+            .then(res => res.data)
     },
     logoutUser() {
         return instance.delete<StandardResponseType>('auth/login').then(res => res.data)

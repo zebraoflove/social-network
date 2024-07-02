@@ -1,7 +1,6 @@
 import {connect} from "react-redux";
 import {
-    setTotalUsersCount, setFetched,
-    requestUsers, followUser, unfollowUser
+    requestUsers, followUser, unfollowUser, actions
 } from "../../redux/usersReducer";
 import Users from "./Users";
 import React from "react";
@@ -53,8 +52,8 @@ let mapStateToProps = (state: AppStateType) => {
         isFriend: getIsFriendS(state)
     }
 }
-export default compose(
+export default compose<React.ComponentType>(
     withAuthRedirect,
     connect(mapStateToProps,
-        {setTotalUsersCount, setFetched, requestUsers, followUser, unfollowUser})
+        {setTotalUsersCount: actions.setTotalUsersCount, setFetched: actions.setFetched, requestUsers, followUser, unfollowUser})
 )(UsersContainer)

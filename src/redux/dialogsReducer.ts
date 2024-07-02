@@ -1,13 +1,6 @@
-import {MessageType, TalkerType} from "../Types/types";
-const ADD_MESSAGE = "ADD-MESSAGE"
-const DELETE_MESSAGE = "DELETE-MESSAGE"
-type AddMessageActionType = {type: typeof ADD_MESSAGE, messageText: string}
-type DeleteMessageActionType =  {type: typeof DELETE_MESSAGE, messageId: number}
-type ActionType = AddMessageActionType | DeleteMessageActionType
-type InitialStateType = {
-    usersData: Array<TalkerType>
-    messagesData: Array<MessageType>}
-let initialState: InitialStateType = {
+import {MessageType} from "../Types/types";
+import {InferActionsTypes} from "./redux-store";
+let initialState = {
     usersData: [
         {
             id: 1, name: 'Igor',
@@ -35,16 +28,22 @@ let initialState: InitialStateType = {
         {id: 5, text: "Of course", belong: false}
     ]
 }
+export type InitialStateType = typeof initialState
+export const actions = {
+    addMessage: (messageText: string) => ({type: "SN/DIALOGS/ADD-MESSAGE", messageText} as const),
+    deleteMessage: (messageId: number) => ({type: "SN/DIALOGS/DELETE-MESSAGE", messageId} as const)
+}
+type ActionType = InferActionsTypes<typeof actions>
 const dialogsReducer = (state = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
-        case ADD_MESSAGE: {
+        case "SN/DIALOGS/ADD-MESSAGE": {
             let newMessage: MessageType = {id: state.messagesData.length + 1, text: action.messageText, belong: true}
             return {
                 ...state,
                 messagesData: [...state.messagesData, newMessage]
             }
         }
-        case DELETE_MESSAGE: {
+        case "SN/DIALOGS/DELETE-MESSAGE": {
             return {
                 ...state,
                 messagesData: state.messagesData.filter(m => m.id !== action.messageId)
@@ -55,6 +54,4 @@ const dialogsReducer = (state = initialState, action: ActionType): InitialStateT
         }
     }
 }
-export const  addMessage = (messageText: string): AddMessageActionType => ({type: ADD_MESSAGE, messageText})
-export const deleteMessage = (messageId: number): DeleteMessageActionType => ({type: DELETE_MESSAGE, messageId})
 export default dialogsReducer

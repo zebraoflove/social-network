@@ -21,9 +21,9 @@ type PropsTypes = {
     initialised: boolean
 }
 class App extends Component<PropsTypes> {
-    catchAllUnhandledErrors = (reason: any) => {
-        alert(reason.reason.message)
-        console.error(reason.reason.message)
+    catchAllUnhandledErrors = (e: PromiseRejectionEvent) => {
+        alert(e.reason.message)
+        console.error(e.reason.message)
     }
     componentDidMount() {
         this.props.initialiseApp()
@@ -62,7 +62,7 @@ class App extends Component<PropsTypes> {
 const mapStateToProps = (state: AppStateType) => ({
     initialised: getInitialisedS(state)
 })
-const AppContainer = compose(
+const AppContainer = compose<React.ComponentType>(
     connect(mapStateToProps, {initialiseApp})
 )(App)
 
