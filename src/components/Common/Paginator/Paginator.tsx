@@ -3,19 +3,20 @@ import cn from "classnames"
 import s from "../Paginator/Paginator.module.css";
 import {Field, Form, Formik} from "formik";
 import {validateFindPage} from "../../../Validations/ValidationFindPage";
-import {Textarea} from "../FormControls/FormControls";
-import {FollowedType} from "../../../Types/types";
+import {Input} from "../FormControls/FormControls";
+import {FilterType, requestUsers} from "../../../redux/usersReducer";
+import {useDispatch} from "react-redux";
+import {AppDispatchType} from "../../../redux/redux-store";
 type PropsType = {
     totalUsersCount: number
     pageSize: number
     portionSize?: number
     currentPage: number
-    term?: string
-    isFriend?: FollowedType
-    requestUsers: (currentPage:number, pageSize:number, term: string, isFriend: FollowedType)=>(void)
+    filter?: FilterType
 }
 const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize = 10, currentPage,
-                                            term = "", requestUsers, isFriend = 'All'}) => {
+                                            filter = {term: "", isFriend: "All"}}) => {
+    const dispatch: AppDispatchType = useDispatch()
     let pagesCount: number = Math.ceil(totalUsersCount / pageSize)
     let pages: Array<number> = []
     for (let i = 1; i <= pagesCount; i++) {
@@ -27,43 +28,37 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
     let rightPortionPageNumber = (portionNumber) * portionSize
     const onPrevPortion = () => {
         let currentPage = leftPortionPageNumber - portionSize
-        requestUsers(currentPage, pageSize, term, isFriend)
+        dispatch(requestUsers(currentPage, pageSize, filter))
         setPortionNumber(portionNumber - 1)
     }
     const onNextPortion = () => {
         let currentPage = rightPortionPageNumber + 1
-        requestUsers(currentPage, pageSize, term, isFriend)
+        dispatch(requestUsers(currentPage, pageSize, filter))
         setPortionNumber(portionNumber + 1)
     }
     const FindPage = () => {
         const onFindPage = (values: any) => {
             let currentPage = values.pageNumber
-            requestUsers(currentPage, pageSize, term, isFriend)
+            dispatch(requestUsers(currentPage, pageSize, filter))
             setPortionNumber(Math.ceil(currentPage / portionSize))
         }
         return <Formik initialValues={{pageNumber: ''}} onSubmit={onFindPage}>
             {() => (
                 <Form>
-                    <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Textarea}/>
+                    <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Input}/>
                     <button type="submit">FIND</button>
                 </Form>
             )}
         </Formik>
     }
-    const FindTerm = () => {
-        type ValuesType = {
-            term: string
-            isFriend: FollowedType
+    const FindFilter = () => {
+        const onChangeFilter = (values: FilterType) => {
+            dispatch(requestUsers(1, pageSize, values))
         }
-        const onFindTerm = (values: ValuesType) => {
-            let term = values.term
-            let isFriend = values.isFriend
-            requestUsers(1, pageSize, term, isFriend)
-        }
-        return <Formik initialValues={{term: term, isFriend: isFriend}} onSubmit={onFindTerm}>
+        return <Formik enableReinitialize initialValues={{term: filter.term, isFriend: filter.isFriend}} onSubmit={onChangeFilter}>
             {() => (
                 <Form>
-                    <Field name="term" placeholder={`Type username`} component={Textarea}/>
+                    <Field name="term" placeholder={`Type username`} component={Input}/>
                     <Field name="isFriend" as="select">
                         <option value="All">All</option>
                         <option value="Followed">Followed</option>
@@ -74,16 +69,16 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
             )}
         </Formik>
     }
-    return <div className={s.pageNumbers}>
+    return <div className={s.pageNumbersArea}>
         {portionNumber > 1 && <button onClick={onPrevPortion}>PREV</button>}
         {pages.filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
             .map(p => {
-                return <span key={p} className={cn({[s.selected] : currentPage === p})}
-                             onClick={() => {requestUsers(p, pageSize, term, isFriend)}}>{p}</span>
+                return <span key={p} className={cn({[s.selected] : currentPage === p}, s.pageNumbers)}
+                             onClick={() => {dispatch(requestUsers(p, pageSize, filter))}}>{p}</span>
             })}
         {portionNumber < portionCount && <button onClick={onNextPortion}>NEXT</button>}
         <FindPage/>
-        <FindTerm/>
+        <FindFilter/>
     </div>
 }
 export default Paginator

@@ -1,4 +1,4 @@
-import {authAPI, StandardResponseType, ResultCodesEnum, ResultCodeWithCaptcha} from "../API/API";
+import {authAPI, StandardResponseType, ResultCodesEnum, ResultCodeWithCaptchaEnum} from "../API/API";
 import {ThunkAction} from "redux-thunk";
 import {AppStateType, InferActionsTypes} from "./redux-store";
 let initialState = {
@@ -9,14 +9,14 @@ let initialState = {
     isFetched: true,
     captchaUrl: null as null | string
 }
-type initialStateType = typeof initialState
-const actions = {
+export type InitialStateType = typeof initialState
+export const actions = {
     setFetched: (isFetched: boolean) => ({type: "SN/AUTH/SET-FETCHED", isFetched} as const),
     setUserData: (id: number | null, email: string | null, login: string | null, isAuth: boolean) => ({type: "SN/AUTH/SET-USER-DATA", payload: {id, email, login, isAuth}} as const),
     setCaptchaUrl: (url: string | null) => ({type: "SN/AUTH/SET-CAPTCHA-URL", url} as const)
 }
 type ActionType = InferActionsTypes<typeof actions>
-const authReducer = (state = initialState, action: ActionType): initialStateType => {
+const authReducer = (state = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
 
         case "SN/AUTH/SET-USER-DATA": {
@@ -48,10 +48,10 @@ export const loginUser = (email: string, password: string, rememberMe: boolean, 
     AppStateType, unknown, ActionType> => async (dispatch) => {
     let data = await authAPI.loginUser(email, password, rememberMe, captcha)
     if (data.resultCode === ResultCodesEnum.Success) {
-        dispatch(authUser())
         dispatch(actions.setCaptchaUrl(null))
-    } else if (data.resultCode === ResultCodeWithCaptcha.CaptchaIsRequired) {
-        dispatch(getCaptcha())
+        await dispatch(authUser())
+    } else if (data.resultCode === ResultCodeWithCaptchaEnum.CaptchaIsRequired) {
+        await dispatch(getCaptcha())
     } else alert(data.messages[0])
 }
 export const logoutUser = (): ThunkAction<Promise<void>, AppStateType, unknown,

@@ -1,29 +1,28 @@
 import s from './MyPosts.module.css';
 import Post from './Post/Post';
 import React from "react";
-import {Field, Form, Formik} from "formik";
+import {Field, Form, Formik, FormikHelpers} from "formik";
 import {validatePost} from "../../../Validations/ValidationPost";
 import {Textarea} from "../../Common/FormControls/FormControls";
-import {PostType} from "../../../Types/types";
-type PostsPropsType = {
-    postsData: Array<PostType>
-    addPost: (newPost: string) => void
-}
-const MyPosts: React.FC<PostsPropsType> = ({postsData, addPost}) => {
+import {useDispatch, useSelector} from "react-redux";
+import {actions} from "../../../redux/profileReducer";
+import {getPostsDataS} from "../../../redux/profileSelectors";
+const MyPosts: React.FC = () => {
+    const postsData = useSelector(getPostsDataS)
     let posts = postsData.map(p => <Post key={p.id} id={p.id} message={p.message} likes={p.likes}/>)
     return (
         <div className={s.postsBlock}>
             <h3>My posts</h3>
-            <NewPost addPost={addPost}/>
+            <NewPost/>
             {posts}
         </div>
     )
 }
-type NewPostPropsType = {addPost: (newPost: string) => void}
-const NewPost: React.FC<NewPostPropsType> = ({addPost}) => {
+const NewPost: React.FC = () => {
+    const dispatch = useDispatch()
     type ValuesType = {newPost: string}
-    let AddPost = (values: ValuesType, {setSubmitting}: any) => {
-        addPost(values.newPost)
+    let AddPost = (values: ValuesType, {setSubmitting}: FormikHelpers<ValuesType>) => {
+        dispatch(actions.addPost(values.newPost))
         values.newPost = ""
         setSubmitting(false)
     }

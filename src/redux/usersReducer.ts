@@ -9,19 +9,21 @@ let initialState = {
     currentPage: 1,
     isFetched: true,
     followingInProgress: [] as Array<number>,
-    term: "",
-    isFriend: "All"
+    filter: {
+        term: "",
+        isFriend: "All" as FollowedType
+    }
 }
 export type InitialStateType = typeof initialState
+export type FilterType = typeof initialState.filter
 export const actions = {
     changeFollowing: (userid: number) => ({type: "SN/USERS/CHANGE-FOLLOWING", userid} as const),
     setUsers: (users: Array<UserType>) => ({type: "SN/USERS/SET-USERS", users} as const),
     setCurrentPage: (currentPage: number) => ({type: "SN/USERS/SET-CURRENT-PAGE", currentPage} as const),
     setTotalUsersCount: (totalCount: number) => ({type: "SN/USERS/SET-TOTAL-USERS-COUNT", totalCount} as const),
     setFetched: (isFetched: boolean) => ({type: "SN/USERS/SET-FETCHED", isFetched} as const),
-    setTerm: (term: string) => ({type: "SN/USERS/SET-TERM", term} as const),
     toggleFollowing: (followingInProgress: boolean, userid: number) => ({type: "SN/USERS/TOGGLE-FOLLOWING", followingInProgress, userid} as const),
-    setFriend: (isFriend: FollowedType) => ({type: "SN/USERS/SET-FRIEND", isFriend} as const)
+    setFilter: (filter: FilterType) => ({type: "SN/USERS/SET-FILTER", payload: filter} as const)
 }
 type ActionType = InferActionsTypes<typeof actions>
 const usersReducer = (state = initialState, action: ActionType): InitialStateType => {
@@ -50,11 +52,8 @@ const usersReducer = (state = initialState, action: ActionType): InitialStateTyp
         case "SN/USERS/SET-FETCHED": {
             return {...state, isFetched: action.isFetched}
         }
-        case "SN/USERS/SET-TERM": {
-            return {...state, term: action.term}
-        }
-        case "SN/USERS/SET-FRIEND": {
-            return {...state, isFriend: action.isFriend}
+        case "SN/USERS/SET-FILTER": {
+            return {...state, filter: action.payload}
         }
         case "SN/USERS/TOGGLE-FOLLOWING": {
             return {
@@ -69,13 +68,12 @@ const usersReducer = (state = initialState, action: ActionType): InitialStateTyp
         }
     }
 }
-export const requestUsers = (page: number, pageSize: number, term: string, isFriend: FollowedType):
+export const requestUsers = (page: number, pageSize: number, filter: FilterType):
     ThunkAction<Promise<void>, AppStateType, unknown,
         ActionType> => async (dispatch) => {
     dispatch(actions.setFetched(true))
-    dispatch(actions.setTerm(term))
-    dispatch(actions.setFriend(isFriend))
-    let data = await usersAPI.getUsers(page, pageSize, term, isFriend)
+    dispatch(actions.setFilter(filter))
+    let data = await usersAPI.getUsers(page, pageSize, filter)
     dispatch(actions.setCurrentPage(page))
     dispatch(actions.setFetched(false))
     dispatch(actions.setUsers(data.items))

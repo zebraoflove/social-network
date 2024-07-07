@@ -5,10 +5,10 @@ type ActionType = InferActionsTypes<typeof actions>
 let initialState = {
     initialised: false
 }
-const actions = {
+export const actions = {
     initialised: () => ({type: "SN/APP/INITIALISED"} as const)
 }
-type InitialStateType = typeof initialState
+export type InitialStateType = typeof initialState
 const appReducer = (state = initialState, action: ActionType): InitialStateType => {
     switch (action.type) {
         case "SN/APP/INITIALISED": {

@@ -1,4 +1,4 @@
-import {actions, followUser, requestUsers, unfollowUser} from "./usersReducer"
+import {actions, FilterType, followUser, requestUsers, unfollowUser} from "./usersReducer"
 import {ResultCodesEnum, StandardResponseType, followAPI, usersAPI, GetUsersResponseType} from "../API/API";
 
 jest.mock("../API/API")
@@ -50,14 +50,14 @@ test("success unfollow thunk", async () => {
 })
 test("success request users thunk", async () => {
     usersAPIMock.getUsers.mockReturnValue(Promise.resolve(getUsersResult))
-    const thunk = requestUsers(1, 6, "", "All")
+    let newFilter: FilterType = {term: "", isFriend: "All"}
+    const thunk = requestUsers(1, 6, newFilter)
     await thunk(dispatchMock, getStateMock, {})
-    expect(dispatchMock).toBeCalledTimes(7)
+    expect(dispatchMock).toBeCalledTimes(6)
     expect(dispatchMock).toHaveBeenNthCalledWith(1, actions.setFetched(true))
-    expect(dispatchMock).toHaveBeenNthCalledWith(2, actions.setTerm(""))
-    expect(dispatchMock).toHaveBeenNthCalledWith(3, actions.setFriend("All"))
-    expect(dispatchMock).toHaveBeenNthCalledWith(4, actions.setCurrentPage(1))
-    expect(dispatchMock).toHaveBeenNthCalledWith(5, actions.setFetched(false))
-    expect(dispatchMock).toHaveBeenNthCalledWith(6, actions.setUsers(getUsersResult.items))
-    expect(dispatchMock).toHaveBeenNthCalledWith(7, actions.setTotalUsersCount(13))
+    expect(dispatchMock).toHaveBeenNthCalledWith(2, actions.setFilter(newFilter))
+    expect(dispatchMock).toHaveBeenNthCalledWith(3, actions.setCurrentPage(1))
+    expect(dispatchMock).toHaveBeenNthCalledWith(4, actions.setFetched(false))
+    expect(dispatchMock).toHaveBeenNthCalledWith(5, actions.setUsers(getUsersResult.items))
+    expect(dispatchMock).toHaveBeenNthCalledWith(6, actions.setTotalUsersCount(13))
 })

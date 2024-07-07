@@ -1,16 +1,19 @@
-import {Field, Form, Formik} from "formik";
+import {Field, Form, Formik, FormikHelpers} from "formik";
 import {validateLink, validateRequiredInfo} from "../../../Validations/ValidationProfile";
 import {Input} from "../../Common/FormControls/FormControls";
 import {ProfileInfoType, ProfileType} from "../../../Types/types";
 import React from "react";
+import {useDispatch} from "react-redux";
+import {saveProfile} from "../../../redux/profileReducer";
+import {AppDispatchType} from "../../../redux/redux-store";
 type PropsType = {
     userProfile: ProfileType
-    saveProfile: (profileInfo: ProfileInfoType) => void
     toggleEditMode: () => void
 }
-export const ProfileDataForm: React.FC<PropsType> = ({userProfile, saveProfile, toggleEditMode}) => {
-    const submit = (values: ProfileInfoType, { setSubmitting }: any) => {
-        saveProfile(values)
+export const ProfileDataForm: React.FC<PropsType> = ({userProfile, toggleEditMode}) => {
+    const dispatch: AppDispatchType = useDispatch()
+    const submit = (values: ProfileInfoType, { setSubmitting }: FormikHelpers<ProfileInfoType>) => {
+        dispatch(saveProfile(values))
         setSubmitting(false)
         toggleEditMode()
     }

@@ -11,10 +11,10 @@ import {connect, Provider} from "react-redux";
 import {initialiseApp} from "./redux/appReducer";
 import Preloader from "./components/Common/Preloader/Preloader";
 import store, {AppStateType} from "./redux/redux-store";
-import ProfileContainer from "./components/Profile/ProfileContainer";
 import {getInitialisedS} from "./redux/appSelectors";
-const DialogsContainer = React.lazy(() => import ('./components/Dialogs/DialogsContainer'))
-const UsersContainer = React.lazy(() => import('./components/Users/UsersContainer'))
+import ProfilePage from "./components/Profile/ProfilePage";
+const DialogsPage = React.lazy(() => import ('./components/Dialogs/DialogsPage'))
+const UsersPage = React.lazy(() => import('./components/Users/UsersPage'))
 const Login = React.lazy(() => import('./components/Login/Login'))
 type PropsTypes = {
     initialiseApp: () => void
@@ -43,9 +43,9 @@ class App extends Component<PropsTypes> {
                             <React.Suspense fallback={<Preloader/>}>
                                 <Routes>
                                     <Route path={'/social-network'} element={<Navigate to={'/profile'}/>}/>
-                                    <Route path='/profile/:userId?' element={<ProfileContainer/>}/>
-                                    <Route path='/dialogs/*' element={<DialogsContainer/>}/>
-                                    <Route path='/users' element={<UsersContainer/>}/>
+                                    <Route path='/profile/:userId?' element={<ProfilePage/>}/>
+                                    <Route path='/dialogs/*' element={<DialogsPage/>}/>
+                                    <Route path='/users' element={<UsersPage/>}/>
                                     <Route path='/news' element={<News/>}/>
                                     <Route path='/music' element={<Music/>}/>
                                     <Route path='/settings' element={<Settings/>}/>

@@ -1,22 +1,30 @@
 import s from './Profile.module.css'
 import ProfileInfo from "./ProfileInfo/ProfileInfo";
-import React from "react";
-import {PostType, ProfileInfoType, ProfileType} from "../../Types/types";
+import React, {useEffect} from "react";
 import MyPosts from "./MyPosts/MyPosts";
-type PropsTypes = {
-    userProfile: ProfileType
-    status: string
-    isOwner: boolean
-    postsData: Array<PostType>
-    addPost: (newPost: string) => void
-    updateStatus: (status: string) => void
-    saveAvatar: (photo: File) => void
-    saveProfile: (profile: ProfileInfoType) => void
-}
-const Profile: React.FC<PropsTypes> = ({userProfile, status, saveProfile, updateStatus, saveAvatar, isOwner, postsData, addPost}) => {
+import {useParams} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserIdS} from "../../redux/authSelectors";
+import {AppDispatchType} from "../../redux/redux-store";
+import {requestStatus, requestUserProfile} from "../../redux/profileReducer";
+const Profile: React.FC = () => {
+    const dispatch: AppDispatchType = useDispatch()
+    // @ts-ignore
+    let {userId}: number | null = useParams()
+    let isOwner: boolean = true
+    if(useParams().userId) isOwner = false
+    const myUserId = useSelector(getUserIdS)
+    if(!userId) userId = myUserId
+    useEffect(() => {
+        // @ts-ignore
+        if(userId) {
+            dispatch(requestUserProfile(userId))
+            dispatch(requestStatus(userId))
+        }
+    }, [userId])
     return <div>
-        <ProfileInfo saveProfile={saveProfile} saveAvatar={saveAvatar} isOwner={isOwner} userProfile={userProfile} status={status} updateStatus={updateStatus}/>
-        <MyPosts postsData={postsData} addPost={addPost}/>
+        <ProfileInfo isOwner={isOwner}/>
+        <MyPosts/>
     </div>;
 }
 export default Profile;

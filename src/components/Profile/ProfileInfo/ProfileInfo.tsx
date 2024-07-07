@@ -1,22 +1,23 @@
 import s from './ProfileInfo.module.css'
 import Preloader from "../../Common/Preloader/Preloader";
 import user from "./../../../Assets/Images/user.jpg"
-import ProfileStatus from "./ProfileStatus";
+import {ProfileStatus} from "./ProfileStatus";
 import React, {useState} from "react";
 import {ProfileDataForm} from "./ProfileDataForm";
-import {ProfileInfoType, ProfileType} from "../../../Types/types";
+import {ProfileType} from "../../../Types/types";
+import {useDispatch, useSelector} from "react-redux";
+import {getUserProfileS} from "../../../redux/profileSelectors";
+import {AppDispatchType} from "../../../redux/redux-store";
+import {saveAvatar} from "../../../redux/profileReducer";
 type PropsType = {
-    userProfile: ProfileType
-    status: string
     isOwner: boolean
-    updateStatus: (status: string) => void
-    saveAvatar: (photo: File) => void
-    saveProfile: (profile: ProfileInfoType) => void
 }
-const ProfileInfo: React.FC<PropsType> = ({userProfile, status, updateStatus, saveAvatar, isOwner, saveProfile}) => {
+const ProfileInfo: React.FC<PropsType> = ({isOwner}) => {
+    const dispatch: AppDispatchType = useDispatch()
+    const userProfile = useSelector(getUserProfileS)
     const [editMode, setEditMode] = useState(false)
     const onAvatarSelected = (e: any) => {
-        if(e.target.files.length !==0) saveAvatar(e.target.files[0])
+        if(e.target.files.length !==0) dispatch(saveAvatar(e.target.files[0]))
     }
     const toggleEditMode = () => {
         setEditMode(!editMode)
@@ -27,9 +28,9 @@ const ProfileInfo: React.FC<PropsType> = ({userProfile, status, updateStatus, sa
     return <div className={s.descriptionBlock}>
         <img src={userProfile.photos.large ? userProfile.photos.large : user}/>
         {isOwner ? <div><input type="file" onChange={onAvatarSelected}/></div> : null}
-        <ProfileStatus isOwner={isOwner} status={status} updateStatus={updateStatus}/>
+        <ProfileStatus isOwner={isOwner}/>
         {isOwner ? <button onClick={toggleEditMode}>Edit</button> : null}
-        {editMode ? <ProfileDataForm userProfile={userProfile} saveProfile={saveProfile} toggleEditMode={toggleEditMode}/>
+        {editMode ? <ProfileDataForm userProfile={userProfile} toggleEditMode={toggleEditMode}/>
             : <ProfileData userProfile={userProfile}/>}
     </div>
 }

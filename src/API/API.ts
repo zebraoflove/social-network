@@ -1,5 +1,6 @@
 import axios from "axios";
-import {FollowedType, PhotosType, ProfileInfoType, ProfileType, UserType} from "../Types/types";
+import {PhotosType, ProfileInfoType, ProfileType, UserType} from "../Types/types";
+import {FilterType} from "../redux/usersReducer";
 const instance = axios.create({
     withCredentials: true,
     headers: {
@@ -11,7 +12,7 @@ export enum ResultCodesEnum {
     Success = 0,
     Error = 1
 }
-export enum ResultCodeWithCaptcha {
+export enum ResultCodeWithCaptchaEnum {
     CaptchaIsRequired = 10
 }
 export type StandardResponseType<D = {}, RC = ResultCodesEnum> = {
@@ -25,7 +26,9 @@ export type GetUsersResponseType = {
     error: string | null
 }
 export const usersAPI = {
-    getUsers(currentPage: number, pageSize: number, term: string, isFriend: FollowedType) {
+    getUsers(currentPage: number, pageSize: number, filter: FilterType) {
+        let term = filter.term
+        let isFriend = filter.isFriend
         let friend = null
         if(isFriend === 'Followed') friend = true
         if(isFriend === 'NotFollowed') friend = false
@@ -41,7 +44,7 @@ export const followAPI = {
         return instance.delete<StandardResponseType>(`follow/${userId}`).then(res => res.data)
     }
 }
-type UpdateAvatarResponseType = {
+export type UpdateAvatarResponseType = {
     data: { photos: PhotosType }
     fieldsErrors: Array<string>
     resultCode: ResultCodesEnum
@@ -72,7 +75,7 @@ export const profileAPI = {
             .then(res => res.data)
     }
 }
-type CaptchaResponseType = {
+export type CaptchaResponseType = {
     url: string
 }
 export const authAPI = {
@@ -81,7 +84,7 @@ export const authAPI = {
             .then(res => res.data)
     },
     loginUser(email: string, password: string, rememberMe = false, captcha: string | null = null) {
-        return instance.post<StandardResponseType<{userId: number}, ResultCodesEnum | ResultCodeWithCaptcha>>
+        return instance.post<StandardResponseType<{userId: number} | {}, ResultCodesEnum | ResultCodeWithCaptchaEnum>>
         ('auth/login', {email, password, rememberMe, captcha})
             .then(res => res.data)
     },

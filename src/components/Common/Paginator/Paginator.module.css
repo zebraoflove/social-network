@@ -2,20 +2,22 @@
     font-weight: bold;
 }
 .pageNumbers {
+    border: black 1px solid;
+}
+.pageNumbersArea {
     text-align: center;
 }
-.pageNumbers span {
+.pageNumbersArea span {
     margin: 3px;
     cursor: pointer;
     font-size: 30px;
 }
-.pageNumbers textarea {
-    height: 30px;
-    width: 90px;
+.pageNumbersArea input {
+    width: 140px;
     text-align: center;
     vertical-align: text-bottom;
 }
-.pageNumbers button {
+.pageNumbersArea button {
     margin: 3px;
     height: 30px;
     width: 60px;

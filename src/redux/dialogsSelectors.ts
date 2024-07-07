@@ -1,5 +1,5 @@
 import {AppStateType} from "./redux-store";
-export const getDialogsPage = (state: AppStateType) => {
+export const getDialogsPageS = (state: AppStateType) => {
     return state.dialogsPage
 }
 export const getUsersDataS = (state: AppStateType) => {

@@ -1,4 +1,4 @@
-import usersReducer, {actions, InitialStateType} from "./usersReducer"
+import usersReducer, {actions, FilterType, InitialStateType} from "./usersReducer"
 
 let state: InitialStateType
 beforeEach(() => {
@@ -14,8 +14,10 @@ beforeEach(() => {
             currentPage: 1,
             isFetched: true,
             followingInProgress: [1, 3] as Array<number>,
-            term: "",
-            isFriend: "All"
+            filter: {
+                term: "",
+                isFriend: "All"
+            }
         }
     }
 )
@@ -46,13 +48,11 @@ test("correctly set current page", () => {
     const newState = usersReducer(state, actions.setCurrentPage(3))
     expect(newState.currentPage).toBe(3)
 })
-test("correctly set term", () => {
-    const newState = usersReducer(state, actions.setTerm("Alex"))
-    expect(newState.term).toBe("Alex")
-})
-test("correctly set friend", () => {
-    const newState = usersReducer(state, actions.setFriend("Followed"))
-    expect(newState.isFriend).toBe("Followed")
+test("correctly set filter", () => {
+    let newFilter: FilterType = {term: "Alex", isFriend: "Followed"}
+    const newState = usersReducer(state, actions.setFilter(newFilter))
+    expect(newState.filter.term).toBe("Alex")
+    expect(newState.filter.isFriend).toBe("Followed")
 })
 test("correctly set following in progress", () => {
     const newState = usersReducer(state, actions.toggleFollowing(true, 2))
