@@ -2,26 +2,27 @@ import s from './FormControls.module.css'
 import React from "react";
 import {ErrorMessage} from "formik";
 import cn from "classnames";
+import {Input} from "antd";
 type PropsType = {
     field: any
     form: any
 }
-export const Textarea: React.FC<PropsType> = ({field, form, ...props}) => {
+export const Textarea_: React.FC<PropsType> = ({field, form, ...props}) => {
     const hasErrors = form.touched[field.name] && form.errors[field.name]
     return (
         <span className={cn({[s.error]: hasErrors}, s.formControl)}>
             <div>
-                <textarea {...field} {...props}/>
+                <Input.TextArea showCount {...field} {...props}/>
                 <ErrorMessage className={s.errorMessage} name={field.name} component="span"/>
             </div>
         </span>
     )
 }
-export const Input: React.FC<PropsType> = ({field, form, ...props}) => {
+export const Input_: React.FC<PropsType> = ({field, form, ...props}) => {
     const hasErrors = form.touched[field.name] && form.errors[field.name]
     return (
         <span className={cn({[s.error]: hasErrors}, s.formControl)}>
-            <input {...field} {...props}/>
+            <Input {...field} {...props}/>
             <ErrorMessage className={s.errorMessage} name={field.name} component="span"/>
         </span>
     )

@@ -1,17 +1,30 @@
-import s from './Header.module.css';
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import React from "react";
-type PropsType = {
-    login: string | null
-    logoutUser: ()=>(void)
-    isAuth: boolean
+import {Button, Layout, Menu, Space} from "antd";
+import {UserOutlined} from "@ant-design/icons";
+import {useDispatch, useSelector} from "react-redux";
+import {getIsAuthS, getLoginS} from "../../redux/authSelectors";
+import {AppDispatchType} from "../../redux/redux-store";
+import {logoutUser} from "../../redux/authReducer";
+
+const Header: React.FC = () => {
+    const {Header} = Layout
+    const login = useSelector(getLoginS)
+    const isAuth = useSelector(getIsAuthS)
+    const dispatch: AppDispatchType = useDispatch()
+    const logout = () => {
+        dispatch(logoutUser())
+    }
+    return <Header style={{display: 'flex', alignItems: 'center'}}>
+        <Space style={{width: 'calc(100% - 300px)'}}>
+            <Menu theme="dark" mode="horizontal">
+                <Menu.Item key='1'><Link to='/users'>All developers</Link></Menu.Item>
+                <Menu.Item key='2'><Link to='/dialogs'>My dialogs</Link></Menu.Item>
+                <Menu.Item key='3'>{isAuth ? <div>
+                        <Button icon={<UserOutlined />} onClick={logout}>{login}</Button></div>
+                    : <Button><Link to={'/login'}>Login</Link></Button>}</Menu.Item>
+            </Menu>
+        </Space>
+    </Header>
 }
-const Header: React.FC<PropsType> = ({login, logoutUser, isAuth}) => {
-    return <header className={s.header}>
-        <img src='https://avatars.mds.yandex.net/i?id=f64b8c100fe0887e2adb35dc30ff773868a6fdab-11543319-images-thumbs&n=13' />
-        <div className={s.loginBlock}>
-            {isAuth ? <div><span>{login}</span><button onClick={logoutUser}>Log out</button></div> : <NavLink to={'/login'}>Login</NavLink>}
-        </div>
-    </header>;
-}
-export default Header;
+export default Header

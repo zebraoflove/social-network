@@ -4,12 +4,14 @@ import {combineReducers, configureStore, ThunkDispatch} from "@reduxjs/toolkit";
 import usersReducer from "./usersReducer";
 import authReducer from "./authReducer";
 import appReducer from "./appReducer";
+import chatReducer from "./chatReducer";
 let reducers = combineReducers({
     profilePage: profileReducer,
     dialogsPage: dialogsReducer,
     usersPage: usersReducer,
     auth: authReducer,
-    app: appReducer
+    app: appReducer,
+    chat: chatReducer
 })
 type RootReducerType = typeof reducers
 export type AppStateType = ReturnType<RootReducerType>

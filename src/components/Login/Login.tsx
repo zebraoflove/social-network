@@ -1,7 +1,7 @@
 import {Field, Form, Formik, FormikHelpers} from "formik";
 import {loginUser, getCaptcha} from "../../redux/authReducer";
 import {validateEmail, validatePassword} from "../../Validations/ValidationLogin";
-import {Input} from "../Common/FormControls/FormControls";
+import {Input_} from "../Common/FormControls/FormControls";
 import {useDispatch, useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 import React from "react";
@@ -18,10 +18,10 @@ const LoginForm: React.FC<PropsTypes> = ({captchaUrl, submit, getCaptcha}) => {
         {({ isSubmitting }) => (
             <Form>
                 <div>
-                    <Field validate={validateEmail} component={Input} type="email" name="email" placeholder="email"/>
+                    <Field validate={validateEmail} component={Input_} type="email" name="email" placeholder="email"/>
                 </div>
                 <div>
-                    <Field validate={validatePassword(8)} component={Input} type="password" name="password" placeholder="password"/>
+                    <Field validate={validatePassword(8)} component={Input_} type="password" name="password" placeholder="password"/>
                 </div>
                 <div>
                     <Field type="checkbox" name="rememberMe"/> Remember me

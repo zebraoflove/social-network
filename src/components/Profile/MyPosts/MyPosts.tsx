@@ -1,12 +1,11 @@
 import s from './MyPosts.module.css';
 import Post from './Post/Post';
-import React from "react";
-import {Field, Form, Formik, FormikHelpers} from "formik";
-import {validatePost} from "../../../Validations/ValidationPost";
-import {Textarea} from "../../Common/FormControls/FormControls";
+import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {actions} from "../../../redux/profileReducer";
 import {getPostsDataS} from "../../../redux/profileSelectors";
+import {Button, Input, Space} from "antd";
+import {SendOutlined} from "@ant-design/icons";
 const MyPosts: React.FC = () => {
     const postsData = useSelector(getPostsDataS)
     let posts = postsData.map(p => <Post key={p.id} id={p.id} message={p.message} likes={p.likes}/>)
@@ -19,14 +18,21 @@ const MyPosts: React.FC = () => {
     )
 }
 const NewPost: React.FC = () => {
+    const [newPost, setNewPost] = useState('')
     const dispatch = useDispatch()
-    type ValuesType = {newPost: string}
-    let AddPost = (values: ValuesType, {setSubmitting}: FormikHelpers<ValuesType>) => {
-        dispatch(actions.addPost(values.newPost))
-        values.newPost = ""
-        setSubmitting(false)
+    const onAddPost = () => {
+        dispatch(actions.addPost(newPost))
+        setNewPost('')
     }
-    return <Formik initialValues={{newPost: ""}} onSubmit={AddPost}>
+    return (
+        <Space>
+            <Space.Compact>
+                <Input.TextArea showCount maxLength={50} autoSize onChange={e => {setNewPost(e.currentTarget.value)}} placeholder="Enter new post" value={newPost}/>
+                <Button onClick={onAddPost} icon={<SendOutlined />}/>
+            </Space.Compact>
+        </Space>
+    )
+    /*<Formik initialValues={{newPost: ""}} onSubmit={AddPost}>
         {({isSubmitting}) => (
             <Form>
                 <div>
@@ -38,6 +44,6 @@ const NewPost: React.FC = () => {
                 </div>
             </Form>
         )}
-    </Formik>
+    </Formik>*/
 }
 export default MyPosts;

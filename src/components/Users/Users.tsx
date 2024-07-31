@@ -54,7 +54,7 @@ const Users: React.FC = () => {
             }
         }
         navigate(`/users${sighArray[0]}${friendStr}${sighArray[1]}${termStr}${sighArray[2]}${pageStr}`)
-    }, [filter, currentPage])
+    }, [filter, currentPage, navigate])
     useEffect(() => {
         const queryPage = Number(searchParams.get("page"))
         const queryTerm = String(searchParams.get("term"))
@@ -62,7 +62,7 @@ const Users: React.FC = () => {
         let actualPage = currentPage
         let actualFilter: FilterType = filter
         if(queryPage) actualPage = queryPage
-        if(queryTerm) actualFilter = {...actualFilter, term: queryTerm}
+        if(queryTerm && queryTerm !== 'null') actualFilter = {...actualFilter, term: queryTerm}
         if(queryIsFriend) actualFilter = {...actualFilter, isFriend: queryIsFriend}
         dispatch(requestUsers(actualPage, pageSize, actualFilter))
     }, [])

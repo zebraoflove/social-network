@@ -1,8 +1,9 @@
 import s from './User.module.css'
 import React from "react";
 import userPhoto from '../../../Assets/Images/user.jpg'
-import {NavLink} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {UserType} from "../../../Types/types";
+import {Button} from "antd";
 type PropsType = {
     user: UserType
     followingInProgress: Array<number>
@@ -13,16 +14,16 @@ const User: React.FC<PropsType> = ({user, followingInProgress, followUser, unfol
     return <div>
         <div key={user.id} className={s.userBlock}>
                     <div className={s.followBlock}>
-                        <NavLink to={'/profile/' + user.id}><img className={s.round}
-                                                              src={user.photos.small ? user.photos.small : userPhoto}/></NavLink>
+                        <Link to={'/profile/' + user.id}><img alt='user' className={s.round}
+                                                              src={user.photos.small ? user.photos.small : userPhoto}/></Link>
                         <div>
                             {user.followed ?
-                                <button disabled={followingInProgress.some(FiPid => FiPid === user.id)} onClick={() => {
+                                <Button disabled={followingInProgress.some(FiPid => FiPid === user.id)} onClick={() => {
                                     unfollowUser(user.id)
-                                }}>UNFOLLOW</button> :
-                                <button disabled={followingInProgress.some(FiPid => FiPid === user.id)} onClick={() => {
+                                }}>UNFOLLOW</Button> :
+                                <Button disabled={followingInProgress.some(FiPid => FiPid === user.id)} onClick={() => {
                                     followUser(user.id)
-                                }}>FOLLOW</button>}
+                                }}>FOLLOW</Button>}
                         </div>
                     </div>
                     <div className={s.infoBlock}>

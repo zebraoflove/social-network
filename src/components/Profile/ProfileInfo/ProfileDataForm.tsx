@@ -1,6 +1,6 @@
 import {Field, Form, Formik, FormikHelpers} from "formik";
 import {validateLink, validateRequiredInfo} from "../../../Validations/ValidationProfile";
-import {Input} from "../../Common/FormControls/FormControls";
+import {Input_} from "../../Common/FormControls/FormControls";
 import {ProfileInfoType, ProfileType} from "../../../Types/types";
 import React from "react";
 import {useDispatch} from "react-redux";
@@ -51,14 +51,14 @@ export const ProfileDataForm: React.FC<PropsType> = ({userProfile, toggleEditMod
 const CreateRequiredInfoField = (placeholder: string, name: string, title: string) => {
     return(
         <div>
-            {title}: <Field validate={validateRequiredInfo} component={Input} name={name} placeholder={placeholder}/>
+            {title}: <Field validate={validateRequiredInfo} component={Input_} name={name} placeholder={placeholder}/>
         </div>
     )
 }
 const CreateContactsField = (placeholder: string) => {
     return(
         <div>
-            <Field validate={validateLink} component={Input} name={`contacts.${placeholder}`} placeholder={placeholder}/>
+            <Field validate={validateLink} component={Input_} name={`contacts.${placeholder}`} placeholder={placeholder}/>
         </div>
     )
 }

@@ -19,7 +19,7 @@ beforeEach(() => {
 test("success initialised thunk", async () => {
     authAPIMock.authUser.mockReturnValue(Promise.resolve(authResult))
     const thunk = initialiseApp()
-    await thunk(dispatchMock, getStateMock, {})
+    thunk(dispatchMock, getStateMock, {})
     expect(dispatchMock).toBeCalledTimes(2)
     expect(dispatchMock).toHaveBeenNthCalledWith(1, authUser())
     expect(dispatchMock).toHaveBeenNthCalledWith(2, actions.initialised())

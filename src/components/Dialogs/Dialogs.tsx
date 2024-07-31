@@ -1,15 +1,14 @@
 import s from './Dialogs.module.css'
 import Message from "./Message/Message";
-import React from "react";
+import React, {useState} from "react";
 import Talker from "./Talker/Talker";
-import {Field, Form, Formik, FormikHelpers} from "formik";
-import {validateMessage} from "../../Validations/ValidationMessage";
-import {Textarea} from "../Common/FormControls/FormControls";
 import {MessageType, TalkerType} from "../../Types/types";
 import {useDispatch, useSelector} from "react-redux";
 import {getDialogsPageS} from "../../redux/dialogsSelectors";
 import {AppDispatchType} from "../../redux/redux-store";
 import {actions} from "../../redux/dialogsReducer";
+import {Button, Input, Space} from "antd";
+import {SendOutlined} from "@ant-design/icons";
 type DialogsPageType = {
     usersData: Array<TalkerType>
     messagesData: Array<MessageType>
@@ -36,24 +35,19 @@ const Dialogs: React.FC<PropsType> = () => {
 }
 const AddMessageForm = () => {
     const dispatch: AppDispatchType = useDispatch()
-    type ValuesType = {message: string}
-    const onAddMessage = (values: ValuesType, {setSubmitting}: FormikHelpers<ValuesType>) => {
-        dispatch(actions.addMessage(values.message))
-        values.message = ""
-        setSubmitting(false)
+    const [message, setMessage] = useState('')
+    const onAddMessage = () => {
+        if(!message) return
+        dispatch(actions.addMessage(message))
+        setMessage('')
     }
-    return <Formik
-        initialValues={{message: ''}}
-        onSubmit={onAddMessage}>
-        {({isSubmitting}) => (
-            <Form>
-                <div className={s.messageArea}>
-                    <Field validate={validateMessage(30)} component={Textarea} name="message"
-                           placeholder="Enter your message"/>
-                    <button type="submit" disabled={isSubmitting}>Send</button>
-                </div>
-            </Form>
-        )}
-    </Formik>
+    return (
+        <Space>
+            <Space.Compact>
+                <Input.TextArea showCount maxLength={50} autoSize onChange={e => {setMessage(e.currentTarget.value)}} placeholder="Enter new message" value={message}/>
+                <Button onClick={onAddMessage} icon={<SendOutlined />}/>
+            </Space.Compact>
+        </Space>
+    )
 }
 export default Dialogs

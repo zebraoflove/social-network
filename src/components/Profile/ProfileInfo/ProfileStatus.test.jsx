@@ -1,5 +1,5 @@
 import {create} from "react-test-renderer";
-import ProfileStatus from "./ProfileStatus";
+import {ProfileStatus} from "./ProfileStatus";
 
 describe('ProfileStatus component', ()=>{
     test('Span should be exist after render', ()=>{

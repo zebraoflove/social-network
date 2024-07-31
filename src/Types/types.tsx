@@ -1,3 +1,7 @@
+import {ThunkAction} from "redux-thunk";
+import {AppStateType} from "../redux/redux-store";
+import {Action} from "redux";
+
 export type PostType = {id: number, message: string, likes: number}
 export type ContactsType = {
     github: string | null
@@ -36,3 +40,6 @@ export type UserType = {
 export type MessageType = {id: number, text: string, belong: boolean}
 export type TalkerType = {id: number, name: string, ava: string}
 export type FollowedType = "All" | "Followed" | "NotFollowed"
+export type ThunkType<ActionType extends Action> = ThunkAction<Promise<void>, AppStateType, unknown,
+    ActionType>
+export type ChatStatusType = "ready" | "pending" | "error"

@@ -3,10 +3,12 @@ import cn from "classnames"
 import s from "../Paginator/Paginator.module.css";
 import {Field, Form, Formik} from "formik";
 import {validateFindPage} from "../../../Validations/ValidationFindPage";
-import {Input} from "../FormControls/FormControls";
+import {Input_} from "../FormControls/FormControls";
 import {FilterType, requestUsers} from "../../../redux/usersReducer";
 import {useDispatch} from "react-redux";
 import {AppDispatchType} from "../../../redux/redux-store";
+import {Button} from "antd";
+import {RightOutlined, LeftOutlined, SearchOutlined} from "@ant-design/icons";
 type PropsType = {
     totalUsersCount: number
     pageSize: number
@@ -45,8 +47,8 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
         return <Formik initialValues={{pageNumber: ''}} onSubmit={onFindPage}>
             {() => (
                 <Form>
-                    <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Input}/>
-                    <button type="submit">FIND</button>
+                    <Field validate={validateFindPage(pagesCount)} name="pageNumber" placeholder={`1...${pagesCount}`} component={Input_}/>
+                    <button type='submit'>Find</button>
                 </Form>
             )}
         </Formik>
@@ -58,25 +60,25 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
         return <Formik enableReinitialize initialValues={{term: filter.term, isFriend: filter.isFriend}} onSubmit={onChangeFilter}>
             {() => (
                 <Form>
-                    <Field name="term" placeholder={`Type username`} component={Input}/>
+                    <Field name="term" placeholder={`Type username`} component={Input_}/>
                     <Field name="isFriend" as="select">
                         <option value="All">All</option>
                         <option value="Followed">Followed</option>
                         <option value="NotFollowed">Not followed</option>
                     </Field>
-                    <button type="submit">FIND</button>
+                    <button type="submit">Find</button>
                 </Form>
             )}
         </Formik>
     }
     return <div className={s.pageNumbersArea}>
-        {portionNumber > 1 && <button onClick={onPrevPortion}>PREV</button>}
+        {portionNumber > 1 && <Button className={s.arrows} onClick={onPrevPortion} icon={<LeftOutlined />}/>}
         {pages.filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
             .map(p => {
                 return <span key={p} className={cn({[s.selected] : currentPage === p}, s.pageNumbers)}
                              onClick={() => {dispatch(requestUsers(p, pageSize, filter))}}>{p}</span>
             })}
-        {portionNumber < portionCount && <button onClick={onNextPortion}>NEXT</button>}
+        {portionNumber < portionCount && <Button className={s.arrows} onClick={onNextPortion} classNames={s.arrow} icon={<RightOutlined />}/>}
         <FindPage/>
         <FindFilter/>
     </div>

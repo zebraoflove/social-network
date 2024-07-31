@@ -9,6 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {getUserProfileS} from "../../../redux/profileSelectors";
 import {AppDispatchType} from "../../../redux/redux-store";
 import {saveAvatar} from "../../../redux/profileReducer";
+import {EditOutlined} from "@ant-design/icons";
+import {Button} from "antd";
 type PropsType = {
     isOwner: boolean
 }
@@ -29,7 +31,7 @@ const ProfileInfo: React.FC<PropsType> = ({isOwner}) => {
         <img src={userProfile.photos.large ? userProfile.photos.large : user}/>
         {isOwner ? <div><input type="file" onChange={onAvatarSelected}/></div> : null}
         <ProfileStatus isOwner={isOwner}/>
-        {isOwner ? <button onClick={toggleEditMode}>Edit</button> : null}
+        {isOwner ? <Button onClick={toggleEditMode} icon={<EditOutlined />}>Edit</Button> : null}
         {editMode ? <ProfileDataForm userProfile={userProfile} toggleEditMode={toggleEditMode}/>
             : <ProfileData userProfile={userProfile}/>}
     </div>
