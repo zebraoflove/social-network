@@ -7,7 +7,7 @@ import {compose} from "redux";
 import {connect, Provider} from "react-redux";
 import {initialiseApp} from "./redux/appReducer";
 import Preloader from "./components/Common/Preloader/Preloader";
-import store, {AppStateType} from "./redux/redux-store";
+import {AppStateType} from "./redux/redux-store";
 import {getInitialisedS} from "./redux/appSelectors";
 import ProfilePage from "./components/Profile/ProfilePage";
 import {Layout} from 'antd';
@@ -81,8 +81,8 @@ const mapStateToProps = (state: AppStateType) => ({
 const AppContainer = compose<React.ComponentType>(
     connect(mapStateToProps, {initialiseApp})
 )(App)
-
-const MainApp = () => {
+type MainAppPropsType = {store: any}
+const MainApp: React.FC<MainAppPropsType> = ({store}) => {
     return <Provider store={store}>
         <AppContainer/>
     </Provider>
