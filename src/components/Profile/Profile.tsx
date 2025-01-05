@@ -16,7 +16,6 @@ const Profile: React.FC = () => {
     const myUserId = useSelector(getUserIdS)
     if(!userId) userId = myUserId
     useEffect(() => {
-        // @ts-ignore
         if(userId) {
             dispatch(requestUserProfile(userId))
             dispatch(requestStatus(userId))
@@ -24,7 +23,7 @@ const Profile: React.FC = () => {
     }, [userId])
     return <div>
         <ProfileInfo isOwner={isOwner}/>
-        <MyPosts/>
+        <MyPosts isOwner={isOwner}/>
     </div>;
 }
 export default Profile;

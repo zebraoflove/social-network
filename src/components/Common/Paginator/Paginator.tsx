@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import cn from "classnames"
 import s from "../Paginator/Paginator.module.css";
 import {Field, Form, Formik} from "formik";
@@ -8,15 +8,15 @@ import {FilterType, requestUsers} from "../../../redux/usersReducer";
 import {useDispatch} from "react-redux";
 import {AppDispatchType} from "../../../redux/redux-store";
 import {Button} from "antd";
-import {RightOutlined, LeftOutlined, SearchOutlined} from "@ant-design/icons";
+import {RightOutlined, LeftOutlined} from "@ant-design/icons";
 type PropsType = {
     totalUsersCount: number
     pageSize: number
     portionSize?: number
-    currentPage: number
+    activePage: number
     filter?: FilterType
 }
-const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize = 10, currentPage,
+const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize = 10, activePage,
                                             filter = {term: "", isFriend: "All"}}) => {
     const dispatch: AppDispatchType = useDispatch()
     let pagesCount: number = Math.ceil(totalUsersCount / pageSize)
@@ -26,23 +26,34 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
     }
     let portionCount: number = Math.ceil(pagesCount / portionSize)
     let [portionNumber, setPortionNumber] = useState(1)
+    let [currentPage, setCurrentPage] = useState(activePage)
+    let [currentFilter, setCurrentFilter] = useState(filter)
     let leftPortionPageNumber = (portionNumber - 1) * portionSize + 1
     let rightPortionPageNumber = (portionNumber) * portionSize
+    useEffect(() => {
+        dispatch(requestUsers(currentPage, pageSize, currentFilter))
+        console.log(currentPage)
+    }, [currentPage]);
+    useEffect(() => {
+        if(currentPage === 1) dispatch(requestUsers(currentPage, pageSize, currentFilter))
+        else {
+            setPortionNumber(1)
+            setCurrentPage(1)
+        }
+        console.log(currentFilter)
+    }, [currentFilter]);
     const onPrevPortion = () => {
-        let currentPage = leftPortionPageNumber - portionSize
-        dispatch(requestUsers(currentPage, pageSize, filter))
+        setCurrentPage(leftPortionPageNumber - portionSize)
         setPortionNumber(portionNumber - 1)
     }
     const onNextPortion = () => {
-        let currentPage = rightPortionPageNumber + 1
-        dispatch(requestUsers(currentPage, pageSize, filter))
+        setCurrentPage(rightPortionPageNumber + 1)
         setPortionNumber(portionNumber + 1)
     }
     const FindPage = () => {
         const onFindPage = (values: any) => {
-            let currentPage = values.pageNumber
-            dispatch(requestUsers(currentPage, pageSize, filter))
-            setPortionNumber(Math.ceil(currentPage / portionSize))
+            setCurrentPage(values.pageNumber)
+            setPortionNumber(Math.ceil(values.pageNumber / portionSize))
         }
         return <Formik initialValues={{pageNumber: ''}} onSubmit={onFindPage}>
             {() => (
@@ -53,11 +64,11 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
             )}
         </Formik>
     }
-    const FindFilter = () => {
+    const ChangeFilter = () => {
         const onChangeFilter = (values: FilterType) => {
-            dispatch(requestUsers(1, pageSize, values))
+            setCurrentFilter(values)
         }
-        return <Formik enableReinitialize initialValues={{term: filter.term, isFriend: filter.isFriend}} onSubmit={onChangeFilter}>
+        return <Formik enableReinitialize initialValues={{term: currentFilter.term, isFriend: currentFilter.isFriend}} onSubmit={onChangeFilter}>
             {() => (
                 <Form>
                     <Field name="term" placeholder={`Type username`} component={Input_}/>
@@ -66,21 +77,21 @@ const Paginator: React.FC<PropsType> = ({totalUsersCount, pageSize, portionSize 
                         <option value="Followed">Followed</option>
                         <option value="NotFollowed">Not followed</option>
                     </Field>
-                    <button type="submit">Find</button>
+                    <button type="submit">Change</button>
                 </Form>
             )}
         </Formik>
     }
     return <div className={s.pageNumbersArea}>
+        <ChangeFilter/>
         {portionNumber > 1 && <Button className={s.arrows} onClick={onPrevPortion} icon={<LeftOutlined />}/>}
         {pages.filter(p => p >= leftPortionPageNumber && p <= rightPortionPageNumber)
             .map(p => {
                 return <span key={p} className={cn({[s.selected] : currentPage === p}, s.pageNumbers)}
-                             onClick={() => {dispatch(requestUsers(p, pageSize, filter))}}>{p}</span>
+                             onClick={() => {setCurrentPage(p)}}>{p}</span>
             })}
         {portionNumber < portionCount && <Button className={s.arrows} onClick={onNextPortion} classNames={s.arrow} icon={<RightOutlined />}/>}
         <FindPage/>
-        <FindFilter/>
     </div>
 }
 export default Paginator

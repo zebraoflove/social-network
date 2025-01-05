@@ -21,7 +21,7 @@ const LoginForm: React.FC<PropsTypes> = ({captchaUrl, submit, getCaptcha}) => {
                     <Field validate={validateEmail} component={Input_} type="email" name="email" placeholder="email"/>
                 </div>
                 <div>
-                    <Field validate={validatePassword(8)} component={Input_} type="password" name="password" placeholder="password"/>
+                    <Field validate={validatePassword(4)} component={Input_} type="password" name="password" placeholder="password"/>
                 </div>
                 <div>
                     <Field type="checkbox" name="rememberMe"/> Remember me
@@ -36,6 +36,8 @@ const LoginForm: React.FC<PropsTypes> = ({captchaUrl, submit, getCaptcha}) => {
                 <button type="submit" disabled={isSubmitting}>
                     Submit
                 </button>
+                <div> You can use test email: free@samuraijs.com</div>
+                <div> And password: free</div>
             </Form>
         )}
     </Formik>

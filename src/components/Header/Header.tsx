@@ -16,15 +16,13 @@ const Header: React.FC = () => {
         dispatch(logoutUser())
     }
     return <Header style={{display: 'flex', alignItems: 'center'}}>
-        <Space style={{width: 'calc(100% - 300px)'}}>
-            <Menu theme="dark" mode="horizontal">
-                <Menu.Item key='1'><Link to='/users'>All developers</Link></Menu.Item>
-                <Menu.Item key='2'><Link to='/dialogs'>My dialogs</Link></Menu.Item>
-                <Menu.Item key='3'>{isAuth ? <div>
+            <Menu theme="dark" mode="horizontal" style={{width: 'calc(100% - 200px)'}}>
+                <Menu.Item key='users'><Link to='/users'>All developers</Link></Menu.Item>
+                <Menu.Item key='dialogs'><Link to='/dialogs'>My dialogs</Link></Menu.Item>
+                <Menu.Item key='login'>{isAuth ? <div>
                         <Button icon={<UserOutlined />} onClick={logout}>{login}</Button></div>
                     : <Button><Link to={'/login'}>Login</Link></Button>}</Menu.Item>
             </Menu>
-        </Space>
     </Header>
 }
 export default Header

@@ -57,6 +57,7 @@ const AllMessages: React.FC = () => {
     }
     useEffect(() => {
         if (isAutoScroll) messagesAnchorRef.current?.scrollIntoView({behavior: "smooth"})
+        console.log(messages.length)
     }, [messages])
     return (
         <div style={{height: '500px', overflowY: 'auto'}} onScroll={scrollHandler}>

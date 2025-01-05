@@ -75,7 +75,7 @@ const Users: React.FC = () => {
     return <div>
         {isFetched ? <Preloader/> : null}
         <Paginator portionSize={10} totalUsersCount={totalUsersCount} pageSize={pageSize}
-                   currentPage={currentPage} filter={filter}/>
+                   activePage={currentPage} filter={filter}/>
         {users.map(u => <User user={u} key={u.id} followUser={follow}
                                  unfollowUser={unfollow} followingInProgress={followingInProgress}/>)}
     </div>

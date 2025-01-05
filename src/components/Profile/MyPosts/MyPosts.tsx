@@ -6,13 +6,16 @@ import {actions} from "../../../redux/profileReducer";
 import {getPostsDataS} from "../../../redux/profileSelectors";
 import {Button, Input, Space} from "antd";
 import {SendOutlined} from "@ant-design/icons";
-const MyPosts: React.FC = () => {
+type PropsType = {
+    isOwner: boolean
+}
+const MyPosts: React.FC<PropsType> = ({isOwner}) => {
     const postsData = useSelector(getPostsDataS)
     let posts = postsData.map(p => <Post key={p.id} id={p.id} message={p.message} likes={p.likes}/>)
     return (
         <div className={s.postsBlock}>
-            <h3>My posts</h3>
-            <NewPost/>
+            <h3>Posts</h3>
+            {isOwner && <NewPost/>}
             {posts}
         </div>
     )
